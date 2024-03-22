@@ -1,6 +1,6 @@
 'use client';
 
-import { Calendar, LogOut, Settings, User } from 'lucide-react';
+import { Calendar, LockKeyhole, LogOut, Settings, User } from 'lucide-react';
 import React, { PropsWithChildren } from 'react';
 import { cn } from '../lib/utils';
 import { UserProfile } from '../types';
@@ -21,6 +21,11 @@ const LINKS = [
   {
     title: 'Cài đặt',
     icon: Settings,
+    href: '/profile',
+  },
+  {
+    title: 'Tài khoản',
+    icon: LockKeyhole,
     href: '/settings',
   },
   {
