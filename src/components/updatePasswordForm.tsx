@@ -15,7 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from './ui/form';
-import { Input } from './ui/input';
+import { PasswordInput } from './ui/password-input';
 import { toast } from './ui/use-toast';
 
 type ProfileFormValues = {
@@ -39,12 +39,11 @@ export function UpdatePasswordForm() {
         </div>
       ),
     });
-    // const { error } = await supabase
-    //   .from('users')
-    //   .update({ first_name: data.firstName, last_name: data.lastName })
-    //   .eq('id', user.id);
+    const { error } = await supabase.auth.updateUser({
+      password: data.password,
+    });
 
-    if (1) {
+    if (error) {
       toast({
         description: (
           <div className='flex gap-2 items-center'>
@@ -78,11 +77,18 @@ export function UpdatePasswordForm() {
           <FormField
             control={form.control}
             name='password'
+            rules={{
+              required: 'Xin hãy nhập mật khẩu',
+              minLength: {
+                value: 6,
+                message: 'Mật khẩu phải có ít nhất 6 ký tự',
+              },
+            }}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Mật khẩu</FormLabel>
                 <FormControl>
-                  <Input placeholder='Password' {...field} />
+                  <PasswordInput placeholder='Password' {...field} />
                 </FormControl>
                 <FormDescription>Nhập mật khẩu mới của bạn</FormDescription>
                 <FormMessage />
@@ -96,12 +102,18 @@ export function UpdatePasswordForm() {
               <FormItem>
                 <FormLabel>Xác nhận mật khẩu</FormLabel>
                 <FormControl>
-                  <Input placeholder='Confirm password' {...field} />
+                  <PasswordInput placeholder='Confirm password' {...field} />
                 </FormControl>
                 <FormDescription>Xác nhận mật khẩu mới của bạn</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
+            rules={{
+              required: 'Xin hãy nhập mật khẩu mới để xác nhận',
+              validate: (value) =>
+                value === form.watch('password') ||
+                'Mật khẩu xác nhận không khớp',
+            }}
           />
 
           <Button type='submit'>Thay đổi mật khẩu</Button>

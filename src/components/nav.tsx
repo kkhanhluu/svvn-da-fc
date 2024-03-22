@@ -87,7 +87,7 @@ function NavItemLink({
     <Link
       href={link.href ?? '#'}
       className={cn(
-        buttonVariants({ variant, size: 'sm' }),
+        buttonVariants({ variant, size: 'lg' }),
         isCurrentPath &&
           'dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white',
         'justify-start'

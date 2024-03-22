@@ -72,7 +72,7 @@ export function AuthenticatedLayoutComponent({
             sizes
           )}`;
         }}
-        className='h-full max-h-[800px] items-stretch'
+        className='h-full flex-1 items-stretch'
       >
         <ResizablePanel
           defaultSize={defaultLayout[0]}
