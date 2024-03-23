@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!user || createUserError != null) {
+      console.log(createUserError);
       return new NextResponse('Cannot create user', { status: 500 });
     }
 
@@ -42,6 +43,7 @@ export async function POST(request: NextRequest) {
       .update({
         first_name: firstName,
         last_name: requestBody.last_name,
+        temp_password: password,
       })
       .eq('id', user.id);
 

@@ -4,8 +4,8 @@ import { Separator } from '@radix-ui/react-dropdown-menu';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { CircleAlert, CircleCheck, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { Database } from '../../database.types';
-import { Button } from './ui/button';
+import { Database } from '../../../database.types';
+import { Button } from '../ui/button';
 import {
   Form,
   FormControl,
@@ -14,23 +14,23 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './ui/form';
-import { PasswordInput } from './ui/password-input';
-import { toast } from './ui/use-toast';
+} from '../ui/form';
+import { PasswordInput } from '../ui/password-input';
+import { toast } from '../ui/use-toast';
 
-type ProfileFormValues = {
+type UpdatePasswordFormValues = {
   password: string;
   confirmPassword: string;
 };
 
 export function UpdatePasswordForm() {
-  const form = useForm<ProfileFormValues>({
+  const form = useForm<UpdatePasswordFormValues>({
     mode: 'onChange',
   });
 
   const supabase = createClientComponentClient<Database>();
 
-  async function onSubmit(data: ProfileFormValues) {
+  async function onSubmit(data: UpdatePasswordFormValues) {
     toast({
       description: (
         <div className='flex gap-2 items-center'>
@@ -39,9 +39,21 @@ export function UpdatePasswordForm() {
         </div>
       ),
     });
-    const { error } = await supabase.auth.updateUser({
+    const {
+      error,
+      data: { user },
+    } = await supabase.auth.updateUser({
       password: data.password,
     });
+
+    if (user) {
+      await supabase
+        .from('users')
+        .update({
+          temp_password: null,
+        })
+        .eq('id', user.id);
+    }
 
     if (error) {
       toast({

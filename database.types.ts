@@ -166,6 +166,7 @@ export type Database = {
           id: string
           last_name: string | null
           role: string | null
+          temp_password: string | null
         }
         Insert: {
           created_at?: string
@@ -174,6 +175,7 @@ export type Database = {
           id?: string
           last_name?: string | null
           role?: string | null
+          temp_password?: string | null
         }
         Update: {
           created_at?: string
@@ -182,6 +184,7 @@ export type Database = {
           id?: string
           last_name?: string | null
           role?: string | null
+          temp_password?: string | null
         }
         Relationships: []
       }

@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Loader2 } from 'lucide-react';
 import { Database } from '../../../database.types';
+import { PasswordInput } from '../ui/password-input';
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -64,12 +65,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             <Label className='sr-only' htmlFor='email'>
               Password
             </Label>
-            <Input
+            <PasswordInput
               id='password'
-              placeholder='Your password'
-              type='password'
+              placeholder='Mật khẩu của bạn'
               autoCapitalize='none'
-              autoComplete='email'
               autoCorrect='off'
               disabled={isLoading}
               {...register('password')}
@@ -86,7 +85,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             disabled={isLoading}
           >
             {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
-            Sign In with Email
+            Đăng nhập
           </button>
         </div>
       </form>

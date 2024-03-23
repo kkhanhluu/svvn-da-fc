@@ -1,4 +1,4 @@
-import { UpdatePasswordForm } from '../../../components/updatePasswordForm';
+import { UpdatePasswordForm } from '../../../components/auth/update-password-form';
 
 export default async function SettingsPage() {
   return (
