@@ -17,16 +17,20 @@ export default async function AuthenticatedLayout({
 
   const supabase = createServerComponentClient({ cookies });
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   const { data: currentUser } = await supabase
     .from('users')
     .select('*')
+    .eq('id', user?.id)
     .single();
 
   if (!currentUser) {
     return redirect('/login');
   }
 
-  // Lud^tq73Tj36
   return (
     <AuthenticatedLayoutComponent
       defaultLayout={defaultLayout}

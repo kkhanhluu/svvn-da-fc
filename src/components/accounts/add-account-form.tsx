@@ -25,7 +25,7 @@ type AccountFormValues = {
   email: string;
 };
 
-export function AccountForm({ trainings }: { trainings: Training[] }) {
+export function AddAccountForm({ trainings }: { trainings: Training[] }) {
   const limitedTrainings = trainings.filter(
     (training) => training.max_attendees != null
   );

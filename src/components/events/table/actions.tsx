@@ -3,10 +3,13 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Row } from '@tanstack/react-table';
-import { CircleAlert, CircleCheck, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Database } from '../../../../database.types';
-import { cn } from '../../../lib/utils';
+import {
+  showErrorToast,
+  showLoadingToast,
+  showSuccessToast,
+} from '../../../helpers/showNotifications';
 import { EventWithTraining } from '../../../types';
 import { Button } from '../../ui/button';
 import {
@@ -16,50 +19,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '../../ui/dropdown-menu';
-import { toast } from '../../ui/use-toast';
 
-function showLoadingToast(message: string) {
-  toast({
-    className: cn(
-      'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
-    ),
-    description: (
-      <div className='flex gap-2 items-center'>
-        <Loader2 className='animate-spin' />
-        <p className='font-bold'>{message}</p>
-      </div>
-    ),
-  });
-}
-
-function showSuccessToast(message: string) {
-  toast({
-    className: cn(
-      'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
-    ),
-    description: (
-      <div className='flex gap-2 items-center'>
-        <CircleCheck className='text-green-600' />
-        <p className='font-bold'>{message}</p>
-      </div>
-    ),
-  });
-}
-
-function showErrorToast() {
-  toast({
-    className: cn(
-      'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
-    ),
-    description: (
-      <div className='flex gap-2 items-center'>
-        <CircleAlert />
-        <p>Đã xảy ra lỗi!</p>
-      </div>
-    ),
-    variant: 'destructive',
-  });
-}
 export function Actions({
   row,
   userId,

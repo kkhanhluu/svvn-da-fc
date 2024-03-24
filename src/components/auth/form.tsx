@@ -4,13 +4,18 @@ import { useRouter } from 'next/navigation';
 import * as React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import { buttonVariants } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Loader2 } from 'lucide-react';
 import { Database } from '../../../database.types';
+import {
+  showErrorToast,
+  showLoadingToast,
+  showSuccessToast,
+} from '../../helpers/showNotifications';
 import { PasswordInput } from '../ui/password-input';
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -30,11 +35,18 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const supabase = createClientComponentClient<Database>();
 
   const signIn: SubmitHandler<InputForm> = async ({ email, password }) => {
-    await supabase.auth.signInWithPassword({
+    showLoadingToast('Đang đăng nhập...');
+    const { error, data } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    router.replace('/events');
+    console.log({ error, data });
+    if (error) {
+      showErrorToast(error.message);
+    } else {
+      router.replace('/');
+      showSuccessToast('Chào mừng bạn quay trở lại');
+    }
   };
 
   return (
@@ -79,14 +91,14 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               </p>
             )}
           </div>
-          <button
+          <Button
             type='submit'
             className={cn(buttonVariants())}
             disabled={isLoading}
           >
             {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
             Đăng nhập
-          </button>
+          </Button>
         </div>
       </form>
       <div className='relative'>

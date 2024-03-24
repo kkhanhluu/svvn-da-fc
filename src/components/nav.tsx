@@ -1,32 +1,83 @@
 'use client';
 
-import { LucideIcon } from 'lucide-react';
+import {
+  Calendar,
+  LockKeyhole,
+  LogOut,
+  LucideIcon,
+  Settings,
+  User,
+  UserPlus,
+} from 'lucide-react';
 import Link from 'next/link';
 
 import { cn } from '@/lib/utils';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { usePathname, useRouter } from 'next/navigation';
 import { buttonVariants } from './ui/button';
+import { Separator } from './ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
 interface NavProps {
   isCollapsed: boolean;
-  links: {
-    title: string;
-    label?: string;
-    icon: LucideIcon;
-    href?: string;
-  }[];
+  isAdmin: boolean;
 }
 
-export function Nav({ links, isCollapsed }: NavProps) {
+const USER_LINKS = [
+  {
+    title: 'Đăng ký',
+    icon: Calendar,
+    href: '/events',
+  },
+  {
+    title: 'Cài đặt',
+    icon: Settings,
+    href: '/profile',
+  },
+  {
+    title: 'Tài khoản',
+    icon: LockKeyhole,
+    href: '/settings',
+  },
+  {
+    title: 'Đăng xuất',
+    icon: LogOut,
+  },
+];
+
+const ADMIN_LINKS = [
+  {
+    title: 'Thêm Tài khoản',
+    label: '',
+    icon: UserPlus,
+    href: '/accounts/new',
+  },
+  {
+    title: 'Tài khoản',
+    label: '',
+    icon: User,
+    href: '/accounts',
+  },
+];
+
+export function Nav({ isCollapsed, isAdmin }: NavProps) {
   return (
     <div
       data-collapsed={isCollapsed}
       className='group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2'
     >
       <nav className='grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2'>
-        {links.map((link, index) => (
+        {isAdmin ? (
+          <>
+            {ADMIN_LINKS.map((link, index) => (
+              <NavItemLink link={link} isCollapsed={isCollapsed} key={index} />
+            ))}
+            <br />
+            <Separator />
+            <br />
+          </>
+        ) : null}
+        {USER_LINKS.map((link, index) => (
           <NavItemLink link={link} isCollapsed={isCollapsed} key={index} />
         ))}
       </nav>
@@ -38,7 +89,12 @@ function NavItemLink({
   link,
   isCollapsed,
 }: {
-  link: NavProps['links'][0];
+  link: {
+    title: string;
+    label?: string;
+    icon: LucideIcon;
+    href?: string;
+  };
   isCollapsed: boolean;
 }) {
   const supabase = createClientComponentClient();
@@ -50,7 +106,7 @@ function NavItemLink({
     router.replace('/');
   }
 
-  const isCurrentPath = pathname.includes(link.href ?? 'impossible-route');
+  const isCurrentPath = pathname === link.href;
   const variant = isCurrentPath ? 'default' : 'ghost';
 
   if (isCollapsed) {

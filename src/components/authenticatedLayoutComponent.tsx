@@ -1,6 +1,5 @@
 'use client';
 
-import { Calendar, LockKeyhole, LogOut, Settings, User } from 'lucide-react';
 import React, { PropsWithChildren } from 'react';
 import { cn } from '../lib/utils';
 import { UserProfile } from '../types';
@@ -11,28 +10,6 @@ import {
   ResizablePanelGroup,
 } from './ui/resizable';
 import { TooltipProvider } from './ui/tooltip';
-
-const LINKS = [
-  {
-    title: 'Đăng ký',
-    icon: Calendar,
-    href: '/events',
-  },
-  {
-    title: 'Cài đặt',
-    icon: Settings,
-    href: '/profile',
-  },
-  {
-    title: 'Tài khoản',
-    icon: LockKeyhole,
-    href: '/settings',
-  },
-  {
-    title: 'Đăng xuất',
-    icon: LogOut,
-  },
-];
 
 interface AuthenticatedLayoutProps {
   defaultLayout: number[] | undefined;
@@ -51,17 +28,6 @@ export function AuthenticatedLayoutComponent({
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
 
   const isAdmin = user.role === 'ADMIN';
-  const links = isAdmin
-    ? [
-        {
-          title: 'Tài khoản',
-          label: '',
-          icon: User,
-          href: '/accounts',
-        },
-        ...LINKS,
-      ]
-    : LINKS;
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -97,7 +63,7 @@ export function AuthenticatedLayoutComponent({
             )}`;
           }}
         >
-          <Nav isCollapsed={isCollapsed} links={links} />
+          <Nav isCollapsed={isCollapsed} isAdmin={isAdmin} />
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>

@@ -21,19 +21,10 @@ export default function LoginPage() {
         <UserAuthForm />
         <div className='px-8 flex flex-col gap-4 text-center text-sm text-muted-foreground'>
           <div>
-            Quên mật khẩu?
+            Quên mật khẩu hoặc chưa có tài khoản?
             <Link
               href='/reset-password'
               className='hover:text-brand ml-1 underline underline-offset-4'
-            >
-              Hãy nhấn vào đây
-            </Link>
-          </div>
-          <div>
-            Chưa có tài khoản?
-            <Link
-              href='/register'
-              className='ml-1 hover:text-brand underline underline-offset-4'
             >
               Hãy liên hệ với admin
             </Link>
