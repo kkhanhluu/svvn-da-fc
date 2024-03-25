@@ -4,24 +4,18 @@ import { Database } from '../../../../../database.types';
 import { UpdateAccountForm } from '../../../../components/accounts/update-account-form';
 import { supabase } from '../../../../helpers/supabase';
 
-export default async function Accounts() {
+export default async function Accounts({ params }: { params: { id: string } }) {
   const supabase = createServerComponentClient<Database>({ cookies });
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
   const { data: currentUser } = await supabase
     .from('users')
     .select('id, first_name, last_name, email, trainings_users(training_id)')
-    .eq('id', user?.id ?? '')
+    .eq('id', params.id)
     .single();
 
   const { data: trainings } = await supabase
     .from('trainings')
     .select('id, description');
-
-  console.log(trainings, currentUser);
 
   if (!currentUser || !trainings) {
     return null;

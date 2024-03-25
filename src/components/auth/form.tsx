@@ -40,11 +40,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       email,
       password,
     });
-    console.log({ error, data });
     if (error) {
       showErrorToast(error.message);
     } else {
-      router.replace('/');
+      router.replace('/events');
       showSuccessToast('Chào mừng bạn quay trở lại');
     }
   };

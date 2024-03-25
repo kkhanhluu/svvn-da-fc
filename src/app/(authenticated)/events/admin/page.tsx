@@ -24,7 +24,6 @@ export default async function EventsPage() {
         </div>
       </div>
       <EventTableForAdmin events={events} />
-      {/* <EventTable events={events} userId={user?.id ?? ''} /> */}
     </div>
   );
 }
