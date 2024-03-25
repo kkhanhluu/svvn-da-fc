@@ -2,6 +2,7 @@
 
 import {
   Calendar,
+  CalendarPlus,
   LockKeyhole,
   LogOut,
   LucideIcon,
@@ -57,6 +58,12 @@ const ADMIN_LINKS = [
     label: '',
     icon: User,
     href: '/accounts',
+  },
+  {
+    title: 'Buổi đá bóng',
+    label: '',
+    icon: CalendarPlus,
+    href: '/events/admin',
   },
 ];
 

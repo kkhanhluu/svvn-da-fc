@@ -37,8 +37,4 @@ export const columns: ColumnDef<UserProfile>[] = [
       return <div>{row.original.temp_password}</div>;
     },
   },
-  {
-    id: 'actions',
-    enableHiding: false,
-  },
 ];

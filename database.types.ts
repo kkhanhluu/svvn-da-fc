@@ -193,6 +193,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_events_for_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: number
+          created_at: string
+          date: string
+          training_id: number
+          event_start_time: string
+          event_end_time: string
+          attendees: Json
+          description: string
+          location: string
+          max_attendees: number
+          week_date: number
+        }[]
+      }
       get_events_for_attendee: {
         Args: {
           attendee_id: string
