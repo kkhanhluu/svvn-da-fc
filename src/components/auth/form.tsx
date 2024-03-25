@@ -5,8 +5,6 @@ import * as React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { Button, buttonVariants } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Loader2 } from 'lucide-react';
@@ -16,6 +14,14 @@ import {
   showLoadingToast,
   showSuccessToast,
 } from '../../helpers/showNotifications';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '../ui/form';
+import { Input } from '../ui/input';
 import { PasswordInput } from '../ui/password-input';
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -26,11 +32,7 @@ type InputForm = {
 };
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { isLoading, errors },
-  } = useForm<InputForm>();
+  const form = useForm<InputForm>();
   const router = useRouter();
   const supabase = createClientComponentClient<Database>();
 
@@ -49,57 +51,55 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   };
 
   return (
-    <div className={cn('grid gap-6', className)} {...props}>
-      <form onSubmit={handleSubmit(signIn)}>
-        <div className='grid gap-2'>
-          <div className='grid gap-1'>
-            <Label className='sr-only' htmlFor='email'>
-              Email
-            </Label>
-            <Input
-              id='email'
-              placeholder='name@example.com'
-              type='email'
-              autoCapitalize='none'
-              autoComplete='email'
-              autoCorrect='off'
-              disabled={isLoading}
-              {...register('email')}
-            />
-            {errors?.email && (
-              <p className='px-1 text-xs text-red-600'>
-                {errors.email.message}
-              </p>
+    <div className={cn('grid gap-6', className)}>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(signIn)} className='grid gap-2'>
+          <FormField
+            control={form.control}
+            name='email'
+            rules={{
+              required: 'Email của bạn',
+            }}
+            render={({ field }) => (
+              <FormItem className='grid gap-1'>
+                <FormControl>
+                  <Input placeholder='Email cuả bạn' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
-          </div>
-          <div className='grid gap-1'>
-            <Label className='sr-only' htmlFor='email'>
-              Password
-            </Label>
-            <PasswordInput
-              id='password'
-              placeholder='Mật khẩu của bạn'
-              autoCapitalize='none'
-              autoCorrect='off'
-              disabled={isLoading}
-              {...register('password')}
-            />
-            {errors?.password && (
-              <p className='px-1 text-xs text-red-600'>
-                {errors.password.message}
-              </p>
+          />
+          <FormField
+            control={form.control}
+            name='password'
+            rules={{
+              required: 'Xin hãy nhập mật khẩu',
+              minLength: {
+                value: 6,
+                message: 'Mật khẩu phải có ít nhất 6 ký tự',
+              },
+            }}
+            render={({ field }) => (
+              <FormItem className='grid gap-1'>
+                <FormControl>
+                  <PasswordInput placeholder='Password' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
-          </div>
+          />
           <Button
             type='submit'
             className={cn(buttonVariants())}
-            disabled={isLoading}
+            disabled={form.formState.isLoading}
           >
-            {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+            {form.formState.isLoading && (
+              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+            )}
             Đăng nhập
           </Button>
-        </div>
-      </form>
+        </form>
+      </Form>
       <div className='relative'>
         <div className='absolute inset-0 flex items-center'>
           <span className='w-full border-t' />
