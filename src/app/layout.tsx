@@ -37,7 +37,7 @@ export default async function RootLayout({
         )}
       >
         <div className='container max-w-[90vw] relative'>
-          <div className='mt-[10vh] flex h-[80vh] rounded-[0.5rem] border bg-background shadow-md md:shadow-xl'>
+          <div className='mt-[5vh] flex h-[90vh] rounded-[0.5rem] border bg-background shadow-md md:shadow-xl'>
             <AuthProvider accessToken={session?.access_token}>
               {children}
             </AuthProvider>
