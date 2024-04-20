@@ -8,7 +8,7 @@ const mailJetClient = Mailjet.apiConnect(
   process.env.NEXT_PUBLIC_MAILJET_SECRET as string
 );
 
-const url = 'http://localhost:3000';
+const url = 'https://svvn-darmstadt.vercel.app/login';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL as string,
@@ -33,7 +33,6 @@ export async function POST(request: NextRequest) {
     });
 
     if (!user || createUserError != null) {
-      console.log(createUserError);
       return new NextResponse('Cannot create user', { status: 500 });
     }
 
@@ -62,38 +61,39 @@ export async function POST(request: NextRequest) {
     }
 
     // send email to user
-    //  await mailJetClient.post('send', { version: 'v3.1' }).request({
-    //    Messages: [
-    //      {
-    //        From: {
-    //          Email: 'svvndarmstadtfc@gmail.com',
-    //          Name: 'CLB bóng đá svvn Darmstadt',
-    //        },
-    //        To: [
-    //          {
-    //            Email: email,
-    //            Name: firstName,
-    //          },
-    //        ],
-    //        Subject: 'Thông tin đăng ký đá bóng',
-    //        TextPart: 'Thông tin đăng ký đá bóng',
-    //        HTMLPart: `<h3>Xin chào ${firstName},</h3>
-    //           <br />
-    //           <p>
-    //           Chào mừng bạn tham gia CLB bóng đá Darmstadt. Để đăng ký đá bóng mỗi tuần, vui lòng sử dụng đường link sau: <a href="${url}">${url}</a>
-    //           </p>
-    //           <br />
-    //           <h4>Thông tin đăng nhập</h4>
-    //           <ul>
-    //           <li><b>Email</b>: ${email}</li>
-    //           <li><b>Password</b>: ${password}</li>
-    //           </ul>
-    //          `,
-    //        CustomID: 'AppGettingStartedTest',
-    //      },
-    //    ],
-    //  });
+    await mailJetClient.post('send', { version: 'v3.1' }).request({
+      Messages: [
+        {
+          From: {
+            Email: 'svvndarmstadtfc@gmail.com',
+            Name: 'CLB bóng đá svvn Darmstadt',
+          },
+          To: [
+            {
+              Email: email,
+              Name: firstName,
+            },
+          ],
+          Subject: 'Thông tin đăng ký đá bóng',
+          TextPart: 'Thông tin đăng ký đá bóng',
+          HTMLPart: `<h3>Xin chào ${firstName},</h3>
+              <br />
+              <p>
+              Chào mừng bạn tham gia CLB bóng đá Darmstadt. Để đăng ký đá bóng mỗi tuần, vui lòng sử dụng đường link sau: <a href="${url}">${url}</a>
+              </p>
+              <br />
+              <h4>Thông tin đăng nhập</h4>
+              <ul>
+              <li><b>Email</b>: ${email}</li>
+              <li><b>Password</b>: ${password}</li>
+              </ul>
+             `,
+          CustomID: 'AppGettingStartedTest',
+        },
+      ],
+    });
   } catch (error) {
+    console.log(error);
     return new NextResponse('Something went wrong', {
       status: 500,
     });

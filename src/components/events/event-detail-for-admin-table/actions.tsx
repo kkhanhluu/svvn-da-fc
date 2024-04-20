@@ -10,7 +10,6 @@ import {
   showLoadingToast,
   showSuccessToast,
 } from '../../../helpers/showNotifications';
-import { EventForAdmin } from '../../../types';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,27 +29,31 @@ import {
   DropdownMenuTrigger,
 } from '../../ui/dropdown-menu';
 
-export function Actions({ row }: { row: Row<EventForAdmin> }) {
+export function Actions({ row }: { row: Row<any> }) {
   const router = useRouter();
 
   const supabase = createClientComponentClient<Database>();
 
-  async function deleteEvent() {
+  async function deleteRegistration() {
     showLoadingToast('Đang huỷ đăng ký...');
 
     const { error: deleteEventUserError } = await supabase
       .from('events_users')
       .delete()
-      .eq('event_id', row.original.id);
-    const { error: deleteEventError } = await supabase
-      .from('events')
-      .delete()
       .eq('id', row.original.id);
 
-    if (deleteEventError || deleteEventUserError) {
+    const updatedAttendees = row.original.filter(
+      (attendee: any) => attendee !== row.original.users.id
+    );
+    const { error: updateEventError } = await supabase
+      .from('events')
+      .update({ attendees: updatedAttendees })
+      .eq('id', row.original.events.id);
+
+    if (deleteEventUserError || updateEventError) {
       showErrorToast();
     } else {
-      showSuccessToast('Đã xóa buổi đá bóng thành công!');
+      showSuccessToast('Đã xóa đăng ký thành công!');
       router.refresh();
     }
   }
@@ -68,29 +71,29 @@ export function Actions({ row }: { row: Row<EventForAdmin> }) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
-          <DropdownMenuItem
-            onClick={() => router.push(`/events/admin/${row.original.id}`)}
-          >
-            Xem chi tiết
-          </DropdownMenuItem>
           <AlertDialogTrigger asChild>
             <DropdownMenuItem className='text-red-600 focus:text-white focus:bg-red-500'>
-              Xóa buổi đá bóng
+              Xóa đăng ký
             </DropdownMenuItem>
           </AlertDialogTrigger>
         </DropdownMenuContent>
       </DropdownMenu>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Bạn có muốn xóa buổi đá bóng này?</AlertDialogTitle>
+          <AlertDialogTitle>
+            Bạn có muốn xóa đăng ký cho {row.original.last_name}{' '}
+            {row.original.first_name}?
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            Sau khi xóa buổi đá bóng, tất cả đăng ký của thành viên cho buổi đá
-            bóng này đều bị hủy. Hành động này không thể được hoàn tác
+            Sau khi xóa đăng ký, hành động này không thể được hoàn tác
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Huỷ</AlertDialogCancel>
-          <AlertDialogAction className='bg-red-600' onClick={deleteEvent}>
+          <AlertDialogAction
+            className='bg-red-600'
+            onClick={deleteRegistration}
+          >
             Đồng ý
           </AlertDialogAction>
         </AlertDialogFooter>
