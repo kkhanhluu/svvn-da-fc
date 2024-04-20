@@ -1,12 +1,6 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { AlertCircle } from 'lucide-react';
 import { cookies } from 'next/headers';
 import { EventTable } from '../../../components/events/table';
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from '../../../components/ui/alert';
 
 export default async function EventsPage() {
   const supabase = createServerComponentClient({ cookies });
@@ -20,7 +14,7 @@ export default async function EventsPage() {
 
   return (
     <div className='hidden h-full flex-1 flex-col space-y-8 p-8 md:flex'>
-      <Alert variant='destructive'>
+      {/* <Alert variant='destructive'>
         <AlertCircle className='h-4 w-4' />
         <AlertTitle>Nội quy đội bóng FC SVVN Darmstadt</AlertTitle>
         <AlertDescription>
@@ -84,7 +78,7 @@ export default async function EventsPage() {
             </li>
           </ul>
         </AlertDescription>
-      </Alert>
+      </Alert> */}
       <div className='flex items-center justify-between space-y-2 mb-8'>
         <div>
           <h2 className='text-2xl font-bold tracking-tight'>Xin chào!</h2>
