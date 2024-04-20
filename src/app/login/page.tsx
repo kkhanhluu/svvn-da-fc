@@ -23,7 +23,7 @@ export default function LoginPage() {
           <div>
             Quên mật khẩu hoặc chưa có tài khoản?
             <Link
-              href='/reset-password'
+              href='https://www.facebook.com/kkhanh.luu.96/'
               className='hover:text-brand ml-1 underline underline-offset-4'
             >
               Hãy liên hệ với admin

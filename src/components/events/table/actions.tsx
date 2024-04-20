@@ -1,6 +1,5 @@
 'use client';
 
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Row } from '@tanstack/react-table';
 import { useRouter } from 'next/navigation';
@@ -12,13 +11,6 @@ import {
 } from '../../../helpers/showNotifications';
 import { EventWithTraining } from '../../../types';
 import { Button } from '../../ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from '../../ui/dropdown-menu';
 
 export function Actions({
   row,
@@ -36,6 +28,10 @@ export function Actions({
   async function register() {
     showLoadingToast('Đang đăng ký...');
     if (alreadyRegistered) {
+      return;
+    }
+
+    if (attendees.length >= row.original.max_attendees) {
       return;
     }
 
@@ -84,27 +80,20 @@ export function Actions({
 
   let menuItem;
   if (alreadyRegistered) {
-    menuItem = (
-      <DropdownMenuItem onClick={unregister}>Huỷ đăng ký</DropdownMenuItem>
-    );
+    menuItem = <Button onClick={unregister}>Huỷ đăng ký</Button>;
   } else {
     menuItem = (
-      <DropdownMenuItem onClick={register}>Đăng ký tham gia</DropdownMenuItem>
+      <Button
+        variant='default'
+        size='sm'
+        className='mt-2 bg-blue-600 text-xs hover:bg-blue-700'
+        disabled={attendees.length >= row.original.max_attendees}
+        onClick={register}
+      >
+        Đăng ký tham gia
+      </Button>
     );
   }
 
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant='ghost' className='h-8 w-8 p-0'>
-          <span className='sr-only'>Open menu</span>
-          <DotsHorizontalIcon className='h-4 w-4' />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align='end'>
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        {menuItem}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+  return menuItem;
 }

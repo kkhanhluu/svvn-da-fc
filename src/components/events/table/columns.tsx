@@ -70,6 +70,7 @@ export const columns: ColumnDef<EventWithTraining>[] = [
     size: 10,
   },
   {
+    header: 'Đăng ký / Hủy đăng ký',
     id: 'actions',
     enableHiding: false,
     size: 10,

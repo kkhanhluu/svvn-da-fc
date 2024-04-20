@@ -44,8 +44,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     if (error) {
       showErrorToast(error.message);
     } else {
-      router.replace('/');
       showSuccessToast('Chào mừng bạn quay trở lại');
+      router.replace('/events');
     }
   };
 
