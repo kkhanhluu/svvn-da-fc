@@ -84,7 +84,7 @@ export function Actions({
       <Button
         variant='default'
         size='sm'
-        className='mt-2 text-xs bg-red-600 text-xs hover:bg-red-700'
+        className='mt-2 text-xs'
         onClick={unregister}
       >
         Huỷ đăng ký
@@ -95,7 +95,7 @@ export function Actions({
       <Button
         variant='default'
         size='sm'
-        className='mt-2 bg-green-600 text-xs hover:bg-green-700'
+        className='mt-2 bg-blue-600 text-xs hover:bg-blue-700'
         disabled={attendees.length >= row.original.max_attendees}
         onClick={register}
       >
