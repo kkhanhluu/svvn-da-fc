@@ -80,7 +80,16 @@ export function Actions({
 
   let menuItem;
   if (alreadyRegistered) {
-    menuItem = <Button onClick={unregister}>Huỷ đăng ký</Button>;
+    menuItem = (
+      <Button
+        variant='default'
+        size='sm'
+        className='mt-2 text-xs'
+        onClick={unregister}
+      >
+        Huỷ đăng ký
+      </Button>
+    );
   } else {
     menuItem = (
       <Button
