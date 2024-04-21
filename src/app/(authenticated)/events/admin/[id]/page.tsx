@@ -14,7 +14,7 @@ export default async function EventForAdminDetail({
   const { data, error } = await supabase
     .from('events_users')
     .select(
-      'id, events(id, date, start_time, end_time, attendees, trainings(id, description)), users(id, first_name, last_name, email)'
+      'id, events(id, date, start_time, end_time, attendees, trainings(id, description)), users(id, first_name, last_name, email, position)'
     )
     .eq('event_id', params.id);
 

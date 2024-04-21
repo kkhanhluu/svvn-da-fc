@@ -83,6 +83,24 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          created_at: string
+          id: number
+          text: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          text?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          text?: string | null
+        }
+        Relationships: []
+      }
       trainings: {
         Row: {
           created_at: string
@@ -165,6 +183,7 @@ export type Database = {
           first_name: string | null
           id: string
           last_name: string | null
+          position: string | null
           role: string | null
           temp_password: string | null
         }
@@ -174,6 +193,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          position?: string | null
           role?: string | null
           temp_password?: string | null
         }
@@ -183,6 +203,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          position?: string | null
           role?: string | null
           temp_password?: string | null
         }
