@@ -6,6 +6,7 @@ import {
   LockKeyhole,
   LogOut,
   LucideIcon,
+  Mail,
   Settings,
   User,
   UserPlus,
@@ -29,6 +30,11 @@ const USER_LINKS = [
     title: 'Đăng ký',
     icon: Calendar,
     href: '/events',
+  },
+  {
+    title: 'Thông báo',
+    icon: Mail,
+    href: '/notification',
   },
   {
     title: 'Cài đặt',
