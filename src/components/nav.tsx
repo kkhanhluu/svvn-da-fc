@@ -27,14 +27,14 @@ interface NavProps {
 
 const USER_LINKS = [
   {
-    title: 'Đăng ký',
-    icon: Calendar,
-    href: '/events',
-  },
-  {
     title: 'Thông báo',
     icon: Mail,
     href: '/notification',
+  },
+  {
+    title: 'Đăng ký',
+    icon: Calendar,
+    href: '/events',
   },
   {
     title: 'Cài đặt',

@@ -1,6 +1,5 @@
 'use client';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { useState } from 'react';
 import { useNotification } from '../../hooks/useNotification';
 import {
   ResizableHandle,
@@ -12,10 +11,7 @@ import { NotificationDisplay } from './notification-display';
 import { NotificationList } from './notification-list';
 
 export function Notifications({ data }: { data: any[] }) {
-  console.log(data);
   const defaultLayout = [265, 440, 655];
-  const navCollapsedSize = 4;
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [notification] = useNotification();
 
   return (
@@ -31,7 +27,7 @@ export function Notifications({ data }: { data: any[] }) {
       >
         <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
           <Tabs defaultValue='all'>
-            <TabsContent value='all' className='m-0'>
+            <TabsContent value='all' className='m-0 mt-4'>
               <NotificationList items={data} />
             </TabsContent>
           </Tabs>

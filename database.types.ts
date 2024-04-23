@@ -85,18 +85,27 @@ export type Database = {
       }
       notifications: {
         Row: {
+          contain_html_content: boolean | null
           created_at: string
           id: number
+          is_important: boolean
+          subject: string | null
           text: string | null
         }
         Insert: {
+          contain_html_content?: boolean | null
           created_at?: string
           id?: number
+          is_important?: boolean
+          subject?: string | null
           text?: string | null
         }
         Update: {
+          contain_html_content?: boolean | null
           created_at?: string
           id?: number
+          is_important?: boolean
+          subject?: string | null
           text?: string | null
         }
         Relationships: []
