@@ -229,7 +229,6 @@ export type Database = {
           training_id: number
           event_start_time: string
           event_end_time: string
-          attendees: Json
           description: string
           location: string
           max_attendees: number
