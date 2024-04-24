@@ -11,7 +11,6 @@ export type Database = {
     Tables: {
       events: {
         Row: {
-          attendees: Json
           created_at: string
           date: string | null
           end_time: string | null
@@ -20,7 +19,6 @@ export type Database = {
           training_id: number | null
         }
         Insert: {
-          attendees?: Json
           created_at?: string
           date?: string | null
           end_time?: string | null
@@ -29,7 +27,6 @@ export type Database = {
           training_id?: number | null
         }
         Update: {
-          attendees?: Json
           created_at?: string
           date?: string | null
           end_time?: string | null
@@ -250,7 +247,6 @@ export type Database = {
           training_id: number
           event_start_time: string
           event_end_time: string
-          attendees: Json
           description: string
           location: string
           max_attendees: number

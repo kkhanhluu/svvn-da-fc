@@ -35,16 +35,11 @@ export function Actions({
       return;
     }
 
-    const updatedAttendees = new Set([...attendees, userId]);
     const { error } = await supabase
-      .from('events')
-      .update({ attendees: Array.from(updatedAttendees) })
-      .eq('id', row.original.id);
-    const { error: insertError } = await supabase
       .from('events_users')
       .insert({ event_id: row.original.id, user_id: userId });
 
-    if (error || insertError) {
+    if (error) {
       showErrorToast();
     } else {
       showSuccessToast('Đăng ký thành công');
@@ -59,18 +54,13 @@ export function Actions({
       return;
     }
 
-    const updatedAttendees = attendees.filter((id) => id !== userId);
     const { error } = await supabase
-      .from('events')
-      .update({ attendees: updatedAttendees })
-      .eq('id', row.original.id);
-    const { error: insertError } = await supabase
       .from('events_users')
       .delete()
       .eq('event_id', row.original.id)
       .eq('user_id', userId);
 
-    if (error || insertError) {
+    if (error) {
       showErrorToast();
     } else {
       showSuccessToast('Huỷ đăng ký thành công');

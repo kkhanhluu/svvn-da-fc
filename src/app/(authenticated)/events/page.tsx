@@ -1,6 +1,7 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { AlertCircle } from 'lucide-react';
 import { cookies } from 'next/headers';
+import { Database } from '../../../../database.types';
 import { EventTable } from '../../../components/events/table';
 import {
   Alert,
@@ -9,14 +10,40 @@ import {
 } from '../../../components/ui/alert';
 
 export default async function EventsPage() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient<Database>({ cookies });
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (!user?.id) {
+    return null;
+  }
+
   const { data: events } = await supabase.rpc('get_events_for_attendee', {
     attendee_id: user?.id,
   });
+
+  if (!events) {
+    return null;
+  }
+
+  const { data: attendees } = await supabase
+    .from('events_users')
+    .select('id, event_id, user_id')
+    .in('event_id', events?.map(({ id }) => id) ?? []);
+
+  const eventsWithAttendees = events?.map((event) => {
+    const eventAttendees = attendees?.filter(
+      (attendee) => attendee.event_id === event.id
+    );
+
+    return {
+      ...event,
+      attendees: eventAttendees?.map(({ user_id }) => user_id) ?? [],
+    };
+  });
+
+  console.log({ eventsWithAttendees });
 
   return (
     <div className='hidden overflow-y-scroll h-full flex-1 flex-col space-y-8 p-8 md:flex'>
@@ -93,7 +120,7 @@ export default async function EventsPage() {
           </p>
         </div>
       </div>
-      <EventTable events={events} userId={user?.id ?? ''} />
+      <EventTable events={eventsWithAttendees} userId={user?.id ?? ''} />
     </div>
   );
 }
