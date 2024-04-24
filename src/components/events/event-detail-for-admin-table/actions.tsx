@@ -42,15 +42,7 @@ export function Actions({ row }: { row: Row<any> }) {
       .delete()
       .eq('id', row.original.id);
 
-    const updatedAttendees = row.original.filter(
-      (attendee: any) => attendee !== row.original.users.id
-    );
-    const { error: updateEventError } = await supabase
-      .from('events')
-      .update({ attendees: updatedAttendees })
-      .eq('id', row.original.events.id);
-
-    if (deleteEventUserError || updateEventError) {
+    if (deleteEventUserError) {
       showErrorToast();
     } else {
       showSuccessToast('Đã xóa đăng ký thành công!');
