@@ -38,11 +38,13 @@ export default async function Accounts({ params }: { params: { id: string } }) {
 }
 
 export async function generateStaticParams() {
-  const {
-    data: { users },
-  } = await supabase.auth.admin.listUsers();
+  const { data } = await supabase.from('users').select('id');
 
-  return users.map(({ id }) => ({
+  if (data == null) {
+    return [];
+  }
+
+  return data.map(({ id }) => ({
     id,
   }));
 }
