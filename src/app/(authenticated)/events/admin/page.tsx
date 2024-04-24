@@ -12,6 +12,22 @@ export default async function EventsPage() {
     return null;
   }
 
+  const { data: attendees } = await supabase
+    .from('events_users')
+    .select('id, event_id, user_id')
+    .in('event_id', events?.map(({ id }) => id) ?? []);
+
+  const eventsWithAttendees = events?.map((event) => {
+    const eventAttendees = attendees?.filter(
+      (attendee) => attendee.event_id === event.id
+    );
+
+    return {
+      ...event,
+      attendees: eventAttendees?.map(({ user_id }) => user_id) ?? [],
+    };
+  });
+
   return (
     <div className='hidden h-full flex-1 flex-col space-y-8 p-8 md:flex'>
       <div className='flex items-center justify-between space-y-2 mb-8'>
@@ -23,7 +39,7 @@ export default async function EventsPage() {
           </p>
         </div>
       </div>
-      <EventTableForAdmin events={events} />
+      <EventTableForAdmin events={eventsWithAttendees} />
     </div>
   );
 }

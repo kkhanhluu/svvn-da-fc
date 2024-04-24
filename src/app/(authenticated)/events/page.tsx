@@ -43,8 +43,6 @@ export default async function EventsPage() {
     };
   });
 
-  console.log({ eventsWithAttendees });
-
   return (
     <div className='hidden overflow-y-scroll h-full flex-1 flex-col space-y-8 p-8 md:flex'>
       <Alert variant='destructive'>
