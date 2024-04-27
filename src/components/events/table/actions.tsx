@@ -35,9 +35,18 @@ export function Actions({
       return;
     }
 
-    const { error } = await supabase
-      .from('events_users')
-      .insert({ event_id: row.original.id, user_id: userId });
+    let error = null;
+    if (row.original.training_id === Number.NEGATIVE_INFINITY) {
+      const { error: registerIrregularEventError } = await supabase
+        .from('events_users')
+        .insert({ irregular_event_id: row.original.id, user_id: userId });
+      error = registerIrregularEventError;
+    } else {
+      const { error: registerRegularEventError } = await supabase
+        .from('events_users')
+        .insert({ event_id: row.original.id, user_id: userId });
+      error = registerRegularEventError;
+    }
 
     if (error) {
       showErrorToast();
@@ -54,11 +63,22 @@ export function Actions({
       return;
     }
 
-    const { error } = await supabase
-      .from('events_users')
-      .delete()
-      .eq('event_id', row.original.id)
-      .eq('user_id', userId);
+    let error = null;
+    if (row.original.training_id === Number.NEGATIVE_INFINITY) {
+      const { error: unregisterIrregularEventError } = await supabase
+        .from('events_users')
+        .delete()
+        .eq('irregular_event_id', row.original.id)
+        .eq('user_id', userId);
+      error = unregisterIrregularEventError;
+    } else {
+      const { error: unregisterRegularEventError } = await supabase
+        .from('events_users')
+        .delete()
+        .eq('event_id', row.original.id)
+        .eq('user_id', userId);
+      error = unregisterRegularEventError;
+    }
 
     if (error) {
       showErrorToast();

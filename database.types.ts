@@ -47,23 +47,33 @@ export type Database = {
       events_users: {
         Row: {
           created_at: string
-          event_id: number
+          event_id: number | null
           id: number
+          irregular_event_id: number | null
           user_id: string
         }
         Insert: {
           created_at?: string
-          event_id: number
+          event_id?: number | null
           id?: number
+          irregular_event_id?: number | null
           user_id?: string
         }
         Update: {
           created_at?: string
-          event_id?: number
+          event_id?: number | null
           id?: number
+          irregular_event_id?: number | null
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "events_users_irregular_event_id_fkey"
+            columns: ["irregular_event_id"]
+            isOneToOne: false
+            referencedRelation: "irregular_events"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "public_events_users_event_id_fkey"
             columns: ["event_id"]
@@ -79,6 +89,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      irregular_events: {
+        Row: {
+          created_at: string
+          date: string | null
+          description: string | null
+          end_time: string | null
+          id: number
+          location: string | null
+          max_attendees: number | null
+          start_time: string | null
+          week_date: number | null
+        }
+        Insert: {
+          created_at?: string
+          date?: string | null
+          description?: string | null
+          end_time?: string | null
+          id?: number
+          location?: string | null
+          max_attendees?: number | null
+          start_time?: string | null
+          week_date?: number | null
+        }
+        Update: {
+          created_at?: string
+          date?: string | null
+          description?: string | null
+          end_time?: string | null
+          id?: number
+          location?: string | null
+          max_attendees?: number | null
+          start_time?: string | null
+          week_date?: number | null
+        }
+        Relationships: []
       }
       notifications: {
         Row: {
@@ -244,6 +290,20 @@ export type Database = {
           created_at: string
           date: string
           training_id: number
+          event_start_time: string
+          event_end_time: string
+          description: string
+          location: string
+          max_attendees: number
+          week_date: number
+        }[]
+      }
+      get_irregular_events_for_attendee: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: number
+          created_at: string
+          date: string
           event_start_time: string
           event_end_time: string
           description: string

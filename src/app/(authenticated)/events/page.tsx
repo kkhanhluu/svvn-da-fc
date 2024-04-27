@@ -19,22 +19,47 @@ export default async function EventsPage() {
     return null;
   }
 
-  const { data: events } = await supabase.rpc('get_events_for_attendee', {
-    attendee_id: user?.id,
-  });
+  const { data: regularEvents = [] } = await supabase.rpc(
+    'get_events_for_attendee',
+    {
+      attendee_id: user?.id,
+    }
+  );
+
+  const { data: irregularEvents = [] } = await supabase.rpc(
+    'get_irregular_events_for_attendee'
+  );
+
+  const events = regularEvents
+    ?.concat(
+      (irregularEvents ?? []).map((event) => ({
+        ...event,
+        training_id: Number.NEGATIVE_INFINITY,
+      }))
+    )
+    .sort((a, b) => a.date.localeCompare(b.date));
 
   if (!events) {
     return null;
   }
 
-  const { data: attendees } = await supabase
+  const regularEventIds = (regularEvents ?? []).map(({ id }) => id).join(',');
+  const irregularEventIds = (irregularEvents ?? [])
+    .map(({ id }) => id)
+    .join(',');
+
+  const { data: attendees, error } = await supabase
     .from('events_users')
-    .select('id, event_id, user_id')
-    .in('event_id', events?.map(({ id }) => id) ?? []);
+    .select('id, event_id, irregular_event_id, user_id')
+    .or(
+      `event_id.in.(${regularEventIds}),irregular_event_id.in.(${irregularEventIds})`
+    );
 
   const eventsWithAttendees = events?.map((event) => {
     const eventAttendees = attendees?.filter(
-      (attendee) => attendee.event_id === event.id
+      (attendee) =>
+        attendee.event_id === event.id ||
+        attendee.irregular_event_id === event.id
     );
 
     return {
@@ -42,6 +67,8 @@ export default async function EventsPage() {
       attendees: eventAttendees?.map(({ user_id }) => user_id) ?? [],
     };
   });
+
+  console.log({ eventsWithAttendees });
 
   return (
     <div className='hidden overflow-y-scroll h-full flex-1 flex-col space-y-8 p-8 md:flex'>
