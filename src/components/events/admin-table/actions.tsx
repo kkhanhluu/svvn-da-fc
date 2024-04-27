@@ -69,7 +69,13 @@ export function Actions({ row }: { row: Row<EventForAdmin> }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[160px]'>
           <DropdownMenuItem
-            onClick={() => router.push(`/events/admin/${row.original.id}`)}
+            onClick={() =>
+              router.push(
+                `/events/admin/${row.original.id}?isIrregular=${
+                  row.original.training_id === Number.NEGATIVE_INFINITY
+                }`
+              )
+            }
           >
             Xem chi tiết
           </DropdownMenuItem>

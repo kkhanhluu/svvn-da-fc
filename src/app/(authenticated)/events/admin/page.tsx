@@ -6,20 +6,41 @@ import { EventTableForAdmin } from '../../../../components/events/admin-table';
 export default async function EventsPage() {
   const supabase = createServerComponentClient<Database>({ cookies });
 
-  const { data: events } = await supabase.rpc('get_events_for_admin');
+  const { data: regularEvents } = await supabase.rpc('get_events_for_admin');
+  const { data: irregularEvents = [] } = await supabase.rpc(
+    'get_irregular_events_for_attendee'
+  );
+
+  const events = regularEvents
+    ?.concat(
+      (irregularEvents ?? []).map((event) => ({
+        ...event,
+        training_id: Number.NEGATIVE_INFINITY,
+      }))
+    )
+    .sort((a, b) => a.date.localeCompare(b.date));
 
   if (!events) {
     return null;
   }
 
+  const regularEventIds = (regularEvents ?? []).map(({ id }) => id).join(',');
+  const irregularEventIds = (irregularEvents ?? [])
+    .map(({ id }) => id)
+    .join(',');
+
   const { data: attendees } = await supabase
     .from('events_users')
-    .select('id, event_id, user_id')
-    .in('event_id', events?.map(({ id }) => id) ?? []);
+    .select('id, event_id, irregular_event_id, user_id')
+    .or(
+      `event_id.in.(${regularEventIds}),irregular_event_id.in.(${irregularEventIds})`
+    );
 
   const eventsWithAttendees = events?.map((event) => {
     const eventAttendees = attendees?.filter(
-      (attendee) => attendee.event_id === event.id
+      (attendee) =>
+        attendee.event_id === event.id ||
+        attendee.irregular_event_id === event.id
     );
 
     return {

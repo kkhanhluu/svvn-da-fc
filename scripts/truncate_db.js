@@ -7,8 +7,6 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
-console.log(process.env.NEXT_PUBLIC_SUPABASE_URL);
-
 async function truncateTables() {
   await supabase.from('trainings').delete().neq('id', 0);
   await supabase.from('events').delete().neq('id', 0);

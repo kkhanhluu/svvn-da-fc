@@ -6,17 +6,35 @@ import { supabase } from '../../../../../helpers/supabase';
 
 export default async function EventForAdminDetail({
   params,
+  searchParams: { isIrregular },
 }: {
-  params: { id: string };
+  searchParams: { isIrregular: string };
+  params: { id: string; isIrregular: boolean };
 }) {
   const supabase = createServerComponentClient<Database>({ cookies });
 
-  const { data, error } = await supabase
-    .from('events_users')
-    .select(
-      'id, events(id, date, start_time, end_time, trainings(id, description)), users(id, first_name, last_name, email, position)'
-    )
-    .eq('event_id', params.id);
+  let data: any[] | null = null;
+  let error = null;
+
+  if (isIrregular === 'true') {
+    const { data: irregularEvent, error: irregularEventError } = await supabase
+      .from('events_users')
+      .select(
+        'id, irregular_events(id, date, start_time, end_time, description), users(id, first_name, last_name, email, position)'
+      )
+      .eq('irregular_event_id', params.id);
+    data = irregularEvent;
+    error = irregularEventError;
+  } else {
+    const { data: regularEvent, error: regularEventError } = await supabase
+      .from('events_users')
+      .select(
+        'id, events(id, date, start_time, end_time, trainings(id, description)), users(id, first_name, last_name, email, position)'
+      )
+      .eq('event_id', params.id);
+    data = regularEvent;
+    error = regularEventError;
+  }
 
   if (error || data == null) {
     return null;
@@ -36,9 +54,21 @@ export default async function EventForAdminDetail({
 }
 
 export async function generateStaticParams() {
-  const { data: events } = await supabase.rpc('get_events_for_admin');
+  const { data: regularEvents } = await supabase.rpc('get_events_for_admin');
+  const { data: irregularEvents = [] } = await supabase.rpc(
+    'get_irregular_events_for_attendee'
+  );
 
-  return (events ?? []).map(({ id }) => ({
+  const events = regularEvents
+    ?.concat(
+      (irregularEvents ?? []).map((event) => ({
+        ...event,
+        training_id: Number.NEGATIVE_INFINITY,
+      }))
+    )
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  return (events ?? []).map(({ id, training_id }) => ({
     id: id.toString(),
   }));
 }

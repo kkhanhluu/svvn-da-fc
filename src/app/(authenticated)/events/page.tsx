@@ -48,7 +48,7 @@ export default async function EventsPage() {
     .map(({ id }) => id)
     .join(',');
 
-  const { data: attendees, error } = await supabase
+  const { data: attendees } = await supabase
     .from('events_users')
     .select('id, event_id, irregular_event_id, user_id')
     .or(
@@ -67,8 +67,6 @@ export default async function EventsPage() {
       attendees: eventAttendees?.map(({ user_id }) => user_id) ?? [],
     };
   });
-
-  console.log({ eventsWithAttendees });
 
   return (
     <div className='hidden overflow-y-scroll h-full flex-1 flex-col space-y-8 p-8 md:flex'>
