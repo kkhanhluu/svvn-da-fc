@@ -9,12 +9,6 @@ export default async function AuthenticatedLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const layout = cookies().get('react-resizable-panels:layout');
-  const collapsed = cookies().get('react-resizable-panels:collapsed');
-
-  const defaultLayout = layout ? JSON.parse(layout.value) : undefined;
-  const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : undefined;
-
   const supabase = createServerComponentClient({ cookies });
 
   const {
@@ -32,12 +26,7 @@ export default async function AuthenticatedLayout({
   }
 
   return (
-    <AuthenticatedLayoutComponent
-      defaultLayout={defaultLayout}
-      defaultCollapsed={defaultCollapsed}
-      navCollapsedSize={4}
-      user={currentUser}
-    >
+    <AuthenticatedLayoutComponent user={currentUser}>
       {children}
     </AuthenticatedLayoutComponent>
   );

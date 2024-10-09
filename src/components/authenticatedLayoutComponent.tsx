@@ -1,6 +1,6 @@
 'use client';
 
-import React, { PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import { Panel, PanelGroup } from 'react-resizable-panels';
 import { cn } from '../lib/utils';
 import { UserProfile } from '../types';
@@ -8,21 +8,13 @@ import { Nav } from './nav';
 import { TooltipProvider } from './ui/tooltip';
 
 interface AuthenticatedLayoutProps {
-  defaultLayout: number[] | undefined;
-  defaultCollapsed?: boolean;
-  navCollapsedSize: number;
   user: UserProfile;
 }
 
 export function AuthenticatedLayoutComponent({
-  defaultLayout = [265, 440, 655],
-  defaultCollapsed = false,
-  navCollapsedSize,
   user,
   children,
 }: PropsWithChildren<AuthenticatedLayoutProps>) {
-  const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
-
   const isAdmin = user.role === 'ADMIN';
 
   return (
@@ -38,34 +30,17 @@ export function AuthenticatedLayoutComponent({
           className='h-full flex-1 items-stretch'
         >
           <Panel
-            defaultSize={defaultLayout[0]}
-            collapsedSize={navCollapsedSize}
+            defaultSize={265}
             collapsible={true}
             minSize={15}
             maxSize={20}
             className={cn(
-              isCollapsed &&
-                'min-w-[50px] transition-all duration-300 ease-in-out'
+              'md:min-w-[50px] transition-all duration-300 ease-in-out'
             )}
-            onCollapse={() => {
-              setIsCollapsed(true);
-              document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-                true
-              )}`;
-            }}
-            onExpand={() => {
-              setIsCollapsed(false);
-              document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-                false
-              )}`;
-            }}
           >
-            <Nav isCollapsed={isCollapsed} isAdmin={isAdmin} />
+            <Nav isAdmin={isAdmin} />
           </Panel>
-          {/* <ResizableHandle withHandle /> */}
-          <Panel defaultSize={defaultLayout[1]} minSize={30}>
-            {children}
-          </Panel>
+          <Panel defaultSize={422}>{children}</Panel>
         </PanelGroup>
       </TooltipProvider>
     </div>
