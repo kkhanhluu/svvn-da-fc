@@ -94,7 +94,7 @@ export function Actions({
       <Button
         variant='default'
         size='sm'
-        className='mt-2 text-xs'
+        className='mt-5 md:mt-2 text-xs'
         onClick={unregister}
       >
         Huỷ đăng ký

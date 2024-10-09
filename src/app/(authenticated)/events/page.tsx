@@ -69,7 +69,7 @@ export default async function EventsPage() {
   });
 
   return (
-    <div className='hidden overflow-y-scroll h-full flex-1 flex-col space-y-8 p-8 md:flex'>
+    <div className='overflow-y-scroll flex-col space-y-8 p-8 md:flex'>
       <Alert variant='destructive'>
         <AlertCircle className='h-4 w-4' />
         <AlertTitle>Nội quy đội bóng FC SVVN Darmstadt</AlertTitle>

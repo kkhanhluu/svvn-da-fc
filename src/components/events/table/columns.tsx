@@ -12,7 +12,10 @@ export const columns: ColumnDef<EventWithTraining>[] = [
         {format(new Date(row.getValue('date')), 'dd-MM-yyyy')}
       </div>
     ),
-    size: 10,
+    meta: {
+      headerClassName: 'min-w-[100px]',
+      cellClassName: 'min-w-[100px]',
+    },
   },
   {
     accessorKey: 'name',
@@ -20,7 +23,10 @@ export const columns: ColumnDef<EventWithTraining>[] = [
     cell: ({ row }) => {
       return <div className='capitalize'>{row.original.description}</div>;
     },
-    size: 10,
+    meta: {
+      headerClassName: 'min-w-[100px]',
+      cellClassName: 'min-w-[100px]',
+    },
   },
   {
     accessorKey: 'numbers',
@@ -36,6 +42,7 @@ export const columns: ColumnDef<EventWithTraining>[] = [
           </div>
           {shouldShowProgress ? (
             <Progress
+              className='md:w-[80%]'
               indicatorColor='bg-green-600'
               value={(currentNumber / maxNumber) * 100}
             />
@@ -43,7 +50,10 @@ export const columns: ColumnDef<EventWithTraining>[] = [
         </div>
       );
     },
-    size: 40,
+    meta: {
+      headerClassName: 'min-w-[100px] md:min-w-[150px]',
+      cellClassName: 'min-w-[100px] md:min-w-[150px]',
+    },
   },
   {
     accessorKey: 'time',
@@ -54,7 +64,10 @@ export const columns: ColumnDef<EventWithTraining>[] = [
         {row.original.event_end_time.substring(0, 5)}
       </div>
     ),
-    size: 10,
+    meta: {
+      headerClassName: 'min-w-[100px]',
+      cellClassName: 'min-w-[100px]',
+    },
   },
   {
     accessorKey: 'location',
@@ -62,17 +75,26 @@ export const columns: ColumnDef<EventWithTraining>[] = [
     cell: ({ row }) => (
       <div className='capitalize'>{row.original.location}</div>
     ),
-    size: 10,
+    meta: {
+      headerClassName: 'min-w-[100px]',
+      cellClassName: 'min-w-[100px]',
+    },
   },
   {
     accessorKey: 'status',
     header: 'Trạng thái',
-    size: 10,
+    meta: {
+      headerClassName: 'min-w-[100px]',
+      cellClassName: 'min-w-[100px]',
+    },
   },
   {
     header: 'Đăng ký / Hủy đăng ký',
     id: 'actions',
     enableHiding: false,
-    size: 10,
+    meta: {
+      headerClassName: 'min-w-[100px]',
+      cellClassName: 'min-w-[100px]',
+    },
   },
 ];

@@ -32,20 +32,13 @@ export default async function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={cn(
-          'min-h-screen bg-background font-sans antialiased',
-          fontSans.variable
-        )}
+        className={cn('bg-background font-sans antialiased', fontSans.variable)}
       >
         <Analytics />
-        <div className='container max-w-[90vw] relative'>
-          <div className='mt-[5vh] flex h-[90vh] rounded-[0.5rem] border bg-background shadow-md md:shadow-xl'>
-            <AuthProvider accessToken={session?.access_token}>
-              {children}
-            </AuthProvider>
-          </div>
-          <Toaster />
-        </div>
+        <AuthProvider accessToken={session?.access_token}>
+          {children}
+        </AuthProvider>
+        <Toaster />
       </body>
     </html>
   );
