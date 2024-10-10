@@ -21,7 +21,7 @@ export default async function ProfilePage() {
   }
 
   return (
-    <div className='hidden h-full flex-1 flex-col space-y-8 p-8 md:flex'>
+    <div className='overflow-y-scroll flex-col space-y-8 p-8 md:p-16 md:mt-10 md:flex'>
       <ProfileForm user={currentUser} />
     </div>
   );
