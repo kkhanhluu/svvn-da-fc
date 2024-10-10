@@ -35,7 +35,7 @@ export function AuthenticatedLayoutComponent({
             minSize={15}
             maxSize={20}
             className={cn(
-              'md:min-w-[50px] transition-all duration-300 ease-in-out'
+              'max-w-[50px] md:max-w-[250px] transition-all duration-300 ease-in-out'
             )}
           >
             <Nav isAdmin={isAdmin} />
