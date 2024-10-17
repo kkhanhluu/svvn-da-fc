@@ -1,4 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
+import { format } from 'date-fns';
 import { Actions } from './actions';
 
 export const columns: ColumnDef<any>[] = [
@@ -23,6 +24,14 @@ export const columns: ColumnDef<any>[] = [
     header: 'Email',
     cell: ({ row }) => {
       return <div>{row.original.users.email}</div>;
+    },
+    size: 10,
+  },
+  {
+    accessorKey: 'created_at',
+    header: 'Ngày tạo',
+    cell: ({ row }) => {
+      return <div>{format(row.original.created_at, 'dd.MM.yyyy HH:mm')}</div>;
     },
     size: 10,
   },

@@ -70,20 +70,31 @@ export function UpdateAccountForm({
       .eq('id', user.id);
 
     // update user's trainings
-    const newRegisteredTrainings = registeredTrainings
-      .filter(
-        (training) =>
-          training.registered && !userRegisteredTrainings.includes(training.id)
-      )
-      .map(({ id }) => ({
-        training_id: id,
-        user_id: user.id,
-      }));
-    const { error: insertUserTrainingError } = await supabase
-      .from('trainings_users')
-      .insert(newRegisteredTrainings);
+    let updateTrainingError;
+    for (const training of registeredTrainings) {
+      if (
+        training.registered &&
+        !userRegisteredTrainings.includes(training.id)
+      ) {
+        const { error } = await supabase.from('trainings_users').insert({
+          training_id: training.id,
+          user_id: user.id,
+        });
+        updateTrainingError = error;
+      } else if (
+        !training.registered &&
+        userRegisteredTrainings.includes(training.id)
+      ) {
+        const { error } = await supabase
+          .from('trainings_users')
+          .delete()
+          .eq('training_id', training.id)
+          .eq('user_id', user.id);
+        updateTrainingError = error;
+      }
+    }
 
-    if (updateUserError || insertUserTrainingError) {
+    if (updateUserError || updateTrainingError) {
       showErrorToast();
     } else {
       showSuccessToast('Cập nhật thành công');
@@ -151,9 +162,6 @@ export function UpdateAccountForm({
                         <FormControl>
                           <Switch
                             checked={training.registered}
-                            disabled={userRegisteredTrainings.includes(
-                              training.id
-                            )}
                             onCheckedChange={(checked) => {
                               const updatedRegisteredTrainings = [
                                 ...registeredTrainings,

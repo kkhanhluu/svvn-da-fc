@@ -1,6 +1,6 @@
 import { Row } from '@tanstack/react-table';
 import { EventWithTraining } from '../../../types';
-import { Badge } from '../../ui/badge';
+import { Button } from '../../ui/button';
 import { TableCell } from '../../ui/table';
 
 export function Status({
@@ -14,13 +14,26 @@ export function Status({
   if (attendees.indexOf(userId) >= 0) {
     return (
       <TableCell>
-        <Badge className='text-white bg-green-600'>Đã đăng ký</Badge>
+        <Button
+          size='sm'
+          onClick={undefined}
+          className='text-xs text-white bg-green-600'
+        >
+          Đã đăng ký
+        </Button>
       </TableCell>
     );
   }
   return (
     <TableCell>
-      <Badge variant='destructive'>Chưa đăng ký</Badge>
+      <Button
+        size='sm'
+        onClick={undefined}
+        className='text-xs'
+        variant='destructive'
+      >
+        Chưa đăng ký
+      </Button>
     </TableCell>
   );
 }

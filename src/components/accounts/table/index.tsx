@@ -17,12 +17,25 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { UserProfile } from '../../../types';
 import { Button } from '../../ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../../ui/dropdown-menu';
 import { columns } from './columns';
 
-export function UserTable({ users }: { users: UserProfile[] }) {
+export function UserTable({
+  users,
+  training_id,
+}: {
+  users: UserProfile[];
+  training_id?: string;
+}) {
   const table = useReactTable({
     data: users,
     columns,
@@ -33,9 +46,29 @@ export function UserTable({ users }: { users: UserProfile[] }) {
   });
   const router = useRouter();
 
+  let label = 'Chọn buổi đá bóng';
+  if (training_id === '6') {
+    label = 'Bóng đá thứ 6';
+  } else if (training_id === '7') {
+    label = 'Bóng đá Chủ nhật';
+  }
+
   return (
     <div className='w-full'>
-      <div className='rounded-md border'>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant='outline'>{label}</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem>
+            <Link href='/accounts?training_id=6'>Bóng đá thứ 6</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href='/accounts?training_id=7'>Bóng đá Chủ nhật</Link>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <div className='rounded-md border mt-8'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
