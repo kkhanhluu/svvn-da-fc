@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { Inter as FontSans } from 'next/font/google';
 import { cookies } from 'next/headers';
 import AuthProvider from '../components/auth/authProvider';
+import { ThemeProvider } from '../components/theme-provider';
 import { Toaster } from '../components/ui/toaster';
 import { cn } from '../lib/utils';
 import './globals.css';
@@ -36,7 +37,14 @@ export default async function RootLayout({
       >
         <Analytics />
         <AuthProvider accessToken={session?.access_token}>
-          {children}
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='system'
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
         </AuthProvider>
         <Toaster />
       </body>

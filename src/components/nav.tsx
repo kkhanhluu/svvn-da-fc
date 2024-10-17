@@ -14,14 +14,17 @@ import {
   LogOut,
   LucideIcon,
   Mail,
+  MoonIcon,
   Settings,
+  SunIcon,
   User,
   UserPlus,
 } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useMediaQuery } from 'react-responsive';
-import { buttonVariants } from './ui/button';
+import { Button, buttonVariants } from './ui/button';
 import { Separator } from './ui/separator';
 
 interface NavProps {
@@ -77,6 +80,8 @@ const ADMIN_LINKS = [
 ];
 
 export function Nav({ isAdmin }: NavProps) {
+  const { setTheme, theme } = useTheme();
+
   return (
     <div className='group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2'>
       <nav className='grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2'>
@@ -93,6 +98,19 @@ export function Nav({ isAdmin }: NavProps) {
         {USER_LINKS.map((link, index) => (
           <NavItemLink link={link} key={index} />
         ))}
+        <Button
+          variant='ghost'
+          size='icon'
+          className='w-[36px] md:w-full md:px-8 md:justify-start'
+          onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+        >
+          <SunIcon className='h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0' />
+          <MoonIcon className='absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100' />
+          <span className='sr-only'>Toggle theme</span>
+          <span className='hidden md:block md:ml-[4px]'>
+            {theme === 'light' ? 'Dark mode' : 'Light mode'}
+          </span>
+        </Button>
       </nav>
     </div>
   );
