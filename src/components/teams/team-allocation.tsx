@@ -207,8 +207,31 @@ export const TeamAllocation: React.FC<TeamAllocationProps> = ({ players }) => {
     );
   };
 
+  const selectPlayersForCleaning = (
+    players: any[],
+    numPlayers: number = 4
+  ): any[] => {
+    // Ensure all players have times_of_cleaning
+    const playersWithCleaning = players.map((player) => ({
+      ...player,
+      times_of_cleaning: player.times_of_cleaning || 0,
+    }));
+
+    // Sort by times_of_cleaning and first_name
+    return playersWithCleaning
+      .sort((a, b) => {
+        if (a.times_of_cleaning !== b.times_of_cleaning) {
+          return a.times_of_cleaning - b.times_of_cleaning;
+        }
+        return a.first_name.localeCompare(b.first_name);
+      })
+      .slice(0, numPlayers);
+  };
+
+  const playersForCleaning = selectPlayersForCleaning(players);
+
   return (
-    <div className='p-4 space-y-6'>
+    <div className='space-y-6'>
       <div className='flex items-center gap-4'>
         <Select
           value={numberOfTeams.toString()}
@@ -223,13 +246,33 @@ export const TeamAllocation: React.FC<TeamAllocationProps> = ({ players }) => {
           </SelectContent>
         </Select>
 
-        <Button onClick={allocateTeams}>Chia đội</Button>
+        <Button onClick={allocateTeams}>Chia đội và bê gôn</Button>
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
         {teams.map((team, index) => (
           <TeamCard key={index} team={team} index={index} />
         ))}
+        <Card className={`w-full bg-yellow-100`}>
+          <CardHeader>
+            <CardTitle className='text-xl font-bold flex justify-between'>
+              <span>Đội bê gôn</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className='space-y-4'>
+              <div>
+                <ul className='list-disc pl-4'>
+                  {playersForCleaning.map((player) => (
+                    <li key={player.id}>
+                      {player.first_name} {player.last_name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

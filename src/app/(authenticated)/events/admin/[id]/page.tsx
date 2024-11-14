@@ -20,7 +20,7 @@ export default async function EventForAdminDetail({
     const { data: irregularEvent, error: irregularEventError } = await supabase
       .from('events_users')
       .select(
-        'id, irregular_events(id, date, start_time, end_time, description), users(id, first_name, last_name, email, position, score), created_at'
+        'id, irregular_events(id, date, start_time, end_time, description), users(id, first_name, last_name, email, position, score, times_of_cleaning), created_at'
       )
       .eq('irregular_event_id', params.id)
       .order('created_at');
@@ -30,7 +30,7 @@ export default async function EventForAdminDetail({
     const { data: regularEvent, error: regularEventError } = await supabase
       .from('events_users')
       .select(
-        'id, events(id, date, start_time, end_time, trainings(id, description)), users(id, first_name, last_name, email, position, score), created_at'
+        'id, events(id, date, start_time, end_time, trainings(id, description)), users(id, first_name, last_name, email, position, score, times_of_cleaning), created_at'
       )
       .eq('event_id', params.id)
       .order('created_at');
