@@ -2,7 +2,7 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { Database } from '../../../../../../database.types';
 import { EventDetailTableForAdmin } from '../../../../../components/events/event-detail-for-admin-table';
-import { supabase } from '../../../../../helpers/supabase';
+import { TeamAllocation } from '../../../../../components/teams/team-allocation';
 
 export default async function EventForAdminDetail({
   params,
@@ -20,7 +20,7 @@ export default async function EventForAdminDetail({
     const { data: irregularEvent, error: irregularEventError } = await supabase
       .from('events_users')
       .select(
-        'id, irregular_events(id, date, start_time, end_time, description), users(id, first_name, last_name, email, position), created_at'
+        'id, irregular_events(id, date, start_time, end_time, description), users(id, first_name, last_name, email, position, score), created_at'
       )
       .eq('irregular_event_id', params.id)
       .order('created_at');
@@ -30,7 +30,7 @@ export default async function EventForAdminDetail({
     const { data: regularEvent, error: regularEventError } = await supabase
       .from('events_users')
       .select(
-        'id, events(id, date, start_time, end_time, trainings(id, description)), users(id, first_name, last_name, email, position), created_at'
+        'id, events(id, date, start_time, end_time, trainings(id, description)), users(id, first_name, last_name, email, position, score), created_at'
       )
       .eq('event_id', params.id)
       .order('created_at');
@@ -43,34 +43,11 @@ export default async function EventForAdminDetail({
   }
 
   return (
-    <div className='hidden h-full flex-1 flex-col space-y-8 p-8 md:flex'>
-      <div className='flex items-center justify-between space-y-2'>
-        <div>
-          <h2 className='text-2xl font-bold tracking-tight'>Xin chào admin!</h2>
-          <p className='text-muted-foreground'>Quản lý buổi đá bóng</p>
-        </div>
-      </div>
+    <div className='overflow-y-scroll flex-col space-y-8 md:p-16 md:mt-10 md:flex'>
+      <h2 className='text-2xl font-bold tracking-tight'>Xin chào admin!</h2>
+      <p className='text-muted-foreground'>Quản lý buổi đá bóng</p>
+      <TeamAllocation players={data.map((d) => d.users)} />
       <EventDetailTableForAdmin data={data} />
     </div>
   );
-}
-
-export async function generateStaticParams() {
-  const { data: regularEvents } = await supabase.rpc('get_events_for_admin');
-  const { data: irregularEvents = [] } = await supabase.rpc(
-    'get_irregular_events_for_attendee'
-  );
-
-  const events = regularEvents
-    ?.concat(
-      (irregularEvents ?? []).map((event) => ({
-        ...event,
-        training_id: Number.NEGATIVE_INFINITY,
-      }))
-    )
-    .sort((a, b) => a.date.localeCompare(b.date));
-
-  return (events ?? []).map(({ id, training_id }) => ({
-    id: id.toString(),
-  }));
 }
