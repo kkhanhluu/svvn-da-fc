@@ -88,13 +88,16 @@ export default async function EventsPage() {
               &#8226; Thời gian hủy đăng ký là ít nhất 2 tiếng trước khi trận
               đấu bắt đầu và phải thông báo trên nhóm chat.
             </li>
+            <li>
+              &#8226; Cố gắng đăng ký trước 24 tiếng để biết có cần gọi thêm người không.
+            </li>
           </ul>
 
           <h4>Thời Gian Xuất Hiện:</h4>
           <ul>
             <li>
               &#8226; Các thành viên phải có mặt đúng giờ trước thời gian trận
-              đấu bắt đầu ít nhất 5 phút.
+              đấu bắt đầu ít nhất 10 phút.
             </li>
             <li>
               &#8226; Trong trường hợp thành viên bị trễ do tàu delay/cancel,
@@ -102,6 +105,17 @@ export default async function EventsPage() {
               của đội.
             </li>
             <li>&#8226; Mỗi lần muộn sẽ bị tính là một lần vi phạm.</li>
+          </ul>
+
+          <h4>Người Đi Kèm:</h4>
+          <ul>
+            <li>
+              &#8226; Nếu mang thêm người đến tham gia, bắt buộc thông báo sớm ít nhất 24 tiếng trước.
+            </li>
+            <li>
+              &#8226; Phí tham gia của người ngoài là 2€ mỗi người.
+
+            </li>
           </ul>
 
           <h4>Bê Gôn:</h4>
@@ -113,25 +127,9 @@ export default async function EventsPage() {
             <li>&#8226; Không thực hiện sẽ được tính là một lần vi phạm.</li>
           </ul>
 
-          <h4>Ghi Nhớ Đội:</h4>
-          <ul>
-            <li>
-              &#8226; Sau khi chia đội trước mỗi trận đấu, mỗi thành viên cần
-              ghi nhớ mình thuộc đội nào để tránh nhầm lẫn và tiết kiệm thời
-              gian.
-            </li>
-          </ul>
           <h4>Quy Định Phạt:</h4>
           <ul>
-            <li>&#8226; Vi phạm lần đầu sẽ nhận cảnh cáo.</li>
-            <li>
-              &#8226; Vi phạm lần thứ hai sẽ bị phạt không được tham gia một
-              trận đấu.
-            </li>
-            <li>
-              &#8226; Vi phạm lần thứ ba sẽ bị phạt không được tham gia hai trận
-              đấu, và cứ tiếp tục như vậy với mỗi lần vi phạm tiếp theo.
-            </li>
+            <li>&#8226; Mỗi lần vi phạm sẽ được ghi nhận, mức phạt là 5€ cho mỗi lần sai phạm.</li>
           </ul>
         </AlertDescription>
       </Alert>
