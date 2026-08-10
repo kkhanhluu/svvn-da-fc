@@ -15,10 +15,8 @@ export function AuthenticatedLayoutComponent({
   user,
   children,
 }: PropsWithChildren<AuthenticatedLayoutProps>) {
-  const isAdmin = user.role === 'ADMIN';
-
   return (
-    <div>
+    <div className='h-screen overflow-hidden'>
       <TooltipProvider delayDuration={0}>
         <PanelGroup
           direction='horizontal'
@@ -38,9 +36,15 @@ export function AuthenticatedLayoutComponent({
               'max-w-[50px] md:max-w-[250px] transition-all duration-300 ease-in-out'
             )}
           >
-            <Nav isAdmin={isAdmin} />
+            <Nav user={user} />
           </Panel>
-          <Panel defaultSize={422}>{children}</Panel>
+          <Panel defaultSize={422}>
+            {/* The panel itself clips overflow (its own inline style, so a
+                class on the panel can't override it) — this inner box is
+                what actually scrolls, keeping the sidebar and the account
+                menu pinned to its bottom on screen regardless of page length. */}
+            <div className='h-full overflow-y-auto'>{children}</div>
+          </Panel>
         </PanelGroup>
       </TooltipProvider>
     </div>
