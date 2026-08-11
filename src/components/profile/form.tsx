@@ -6,7 +6,9 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { CircleAlert, CircleCheck, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Database } from '../../../database.types';
+import { getFullName } from '../../helpers/playerName';
 import { UserProfile } from '../../types';
+import { AvatarUpload } from '../avatar-upload';
 import { Button } from '../ui/button';
 import {
   Form,
@@ -82,6 +84,22 @@ export function ProfileForm({ user }: { user: UserProfile }) {
         <p className='text-sm text-muted-foreground'>
           Cập nhật thông tin cá nhân
         </p>
+      </div>
+      <Separator />
+      <div className='flex items-center gap-4'>
+        <AvatarUpload
+          userId={user.id}
+          name={getFullName(user)}
+          avatarUrl={user.avatar_url}
+          className='h-20 w-20'
+          fallbackClassName='text-xl'
+        />
+        <div>
+          <p className='text-sm font-medium'>Ảnh đại diện</p>
+          <p className='text-sm text-muted-foreground'>
+            Di chuột lên ảnh để đổi. JPG hoặc PNG, tối đa 2 MB.
+          </p>
+        </div>
       </div>
       <Separator />
       <Form {...form}>
