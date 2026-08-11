@@ -9,7 +9,7 @@ export default async function SquadPage() {
   const { data: players } = await supabase.rpc('get_squad_stats');
 
   return (
-    <div className='flex h-full flex-1 flex-col space-y-5 p-5 sm:space-y-8 sm:p-8 md:p-16'>
+    <div className='flex min-h-full flex-1 flex-col space-y-5 p-5 sm:space-y-8 sm:p-8 md:p-16'>
       <div>
         <h2 className='text-[22px] font-semibold tracking-tight sm:text-2xl sm:font-bold'>
           Đội hình

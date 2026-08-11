@@ -53,7 +53,7 @@ export default async function CompetitionDetailPage({
   }));
 
   return (
-    <div className='flex h-full flex-1 flex-col space-y-5 p-5 sm:space-y-6 sm:p-8 md:p-16'>
+    <div className='flex min-h-full flex-1 flex-col space-y-5 p-5 sm:space-y-6 sm:p-8 md:p-16'>
       <Link
         href='/competitions'
         className='text-sm text-muted-foreground hover:text-foreground'

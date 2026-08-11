@@ -204,7 +204,7 @@ export default async function MatchDetailPage({
   const awayWon = played && (match.away_score ?? 0) > (match.home_score ?? 0);
 
   return (
-    <div className='flex h-full flex-1 flex-col space-y-5 p-5 sm:space-y-6 sm:p-8 md:p-16'>
+    <div className='flex min-h-full flex-1 flex-col space-y-5 p-5 sm:space-y-6 sm:p-8 md:p-16'>
       <Link
         href={`/competitions/${competitionId}`}
         // flex-none: `truncate` zeroes the automatic minimum size, so without

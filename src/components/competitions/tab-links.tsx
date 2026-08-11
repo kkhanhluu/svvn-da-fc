@@ -26,7 +26,12 @@ export function TabLinks({
   return (
     <div
       className={cn(
-        'flex w-full items-center gap-0.5 rounded-lg bg-muted p-1 sm:inline-flex sm:h-11 sm:w-auto sm:gap-1 sm:p-1.5',
+        // flex-none: the horizontal scroll below zeroes this box's automatic
+        // minimum height, so a flex-column page would otherwise squash the
+        // strip flat once its content outgrows the viewport.
+        // self-start keeps the track hugging its tabs instead of being
+        // stretched across the whole content column.
+        'flex w-full flex-none items-center gap-0.5 rounded-lg bg-muted p-1 sm:inline-flex sm:h-11 sm:w-auto sm:gap-1 sm:self-start sm:p-1.5',
         // Four Vietnamese labels fit a 390px screen at this size; the scroll
         // is a fallback for narrower phones, not the normal state.
         !fill && 'overflow-x-auto [&::-webkit-scrollbar]:hidden'
