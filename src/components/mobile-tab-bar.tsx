@@ -13,7 +13,7 @@ import { DropdownMenu, DropdownMenuTrigger } from './ui/dropdown-menu';
 const TAB_LINKS = USER_LINKS.filter((link) => link.href !== '/notification');
 
 const TAB_CLASSES =
-  'flex h-full flex-col items-center justify-start gap-[5px] py-2 text-[11px]';
+  'flex h-full flex-col items-center justify-start gap-1.5 rounded-lg py-2 text-xs active:bg-muted';
 
 function isActive(pathname: string, link: (typeof TAB_LINKS)[number]): boolean {
   return (
@@ -30,12 +30,15 @@ export function MobileTabBar({ user }: { user: UserProfile }) {
   const pathname = usePathname();
   const isAdmin = user.role === 'ADMIN';
 
-  const isAccountRoute = ['/profile', '/settings', '/notification', '/accounts'].some(
-    (href) => pathname === href || pathname.startsWith(`${href}/`)
-  );
+  const isAccountRoute = [
+    '/profile',
+    '/settings',
+    '/notification',
+    '/accounts',
+  ].some((href) => pathname === href || pathname.startsWith(`${href}/`));
 
   return (
-    <nav className='fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t bg-background px-2 pt-2 pb-[max(22px,env(safe-area-inset-bottom))] md:hidden'>
+    <nav className='fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 gap-1 border-t bg-background px-2 pt-2.5 pb-[max(18px,env(safe-area-inset-bottom))] md:hidden'>
       {TAB_LINKS.map((link) => {
         const active = isActive(pathname, link);
 
@@ -50,7 +53,7 @@ export function MobileTabBar({ user }: { user: UserProfile }) {
                 : 'font-medium text-muted-foreground'
             )}
           >
-            <link.icon className='h-[22px] w-[22px]' />
+            <link.icon className='h-6 w-6' strokeWidth={active ? 2.25 : 1.75} />
             {link.title}
           </Link>
         );
@@ -65,7 +68,10 @@ export function MobileTabBar({ user }: { user: UserProfile }) {
               : 'font-medium text-muted-foreground'
           )}
         >
-          <User className='h-[22px] w-[22px]' />
+          <User
+            className='h-6 w-6'
+            strokeWidth={isAccountRoute ? 2.25 : 1.75}
+          />
           Tài khoản
         </DropdownMenuTrigger>
         <AccountMenuContent
