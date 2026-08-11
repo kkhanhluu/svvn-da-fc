@@ -6,7 +6,11 @@ import { notFound } from 'next/navigation';
 import { Database } from '../../../../../../../database.types';
 import { TabLinks } from '../../../../../../components/competitions/tab-links';
 import { DetailItem } from '../../../../../../components/detail-list';
-import { Lineups } from '../../../../../../components/matches/lineups';
+import { SoccerBall } from '../../../../../../components/icons/soccer-ball';
+import {
+  hasLineupPlayers,
+  Lineups,
+} from '../../../../../../components/matches/lineups';
 import {
   MatchEventWithPlayers,
   MatchSummary,
@@ -21,7 +25,7 @@ import {
 } from '../../../../../../helpers/buildLineups';
 import { isPlayed } from '../../../../../../helpers/competition';
 import { getCurrentProfile } from '../../../../../../helpers/getCurrentProfile';
-import { getTeamAbbr } from '../../../../../../helpers/playerName';
+import { getFullName, getTeamAbbr } from '../../../../../../helpers/playerName';
 import { cn } from '../../../../../../lib/utils';
 import { CompetitionTeam, UserProfile } from '../../../../../../types';
 
@@ -88,6 +92,21 @@ export default async function MatchDetailPage({
 
   const events = (eventRows ?? []) as unknown as MatchEventWithPlayers[];
 
+  // Goal scorers shown next to the score, minute order per side (`events`
+  // is already sorted by minute). Own goals are left out, the same way the
+  // squad's personal goal tallies exclude them elsewhere.
+  const goalScorers = (teamId?: number) =>
+    events
+      .filter((event) => event.type === 'goal' && event.competition_team_id === teamId)
+      .map((event) => ({
+        id: event.id,
+        name: event.player ? getFullName(event.player) : event.player_name ?? '',
+        minute: event.minute,
+      }));
+
+  const homeGoals = goalScorers(homeTeam?.id);
+  const awayGoals = goalScorers(awayTeam?.id);
+
   const { data: lineupRows, error: lineupsError } = await supabase
     .from('match_lineups')
     .select(LINEUP_SELECT)
@@ -121,6 +140,14 @@ export default async function MatchDetailPage({
   ].map((tab) => ({
     ...tab,
     href: `/competitions/${competitionId}/matches/${matchId}?tab=${tab.key}`,
+  }));
+
+  const lineupViewTabs = [
+    { key: 'pitch', label: 'Sơ đồ' },
+    { key: 'list', label: 'Danh sách' },
+  ].map((tab) => ({
+    ...tab,
+    href: `/competitions/${competitionId}/matches/${matchId}?tab=lineups&view=${tab.key}`,
   }));
 
   const infoItems: DetailItem[] = [
@@ -218,14 +245,43 @@ export default async function MatchDetailPage({
         </div>
       </div>
 
-      <TabLinks tabs={tabs} activeKey={activeTab} />
+      {homeGoals.length > 0 || awayGoals.length > 0 ? (
+        <div className='flex items-start justify-center gap-6 md:gap-10 -mt-2'>
+          <div className='flex flex-1 flex-col items-end gap-0.5'>
+            {homeGoals.map((goal) => (
+              <p
+                key={goal.id}
+                className='flex items-center gap-1 truncate text-xs text-muted-foreground'
+              >
+                {goal.name} {goal.minute != null ? `${goal.minute}'` : ''}
+                <SoccerBall className='h-3 w-3 flex-none' />
+              </p>
+            ))}
+          </div>
+          <div className='w-10 flex-none' />
+          <div className='flex flex-1 flex-col items-start gap-0.5'>
+            {awayGoals.map((goal) => (
+              <p
+                key={goal.id}
+                className='flex items-center gap-1 truncate text-xs text-muted-foreground'
+              >
+                <SoccerBall className='h-3 w-3 flex-none' />
+                {goal.name} {goal.minute != null ? `${goal.minute}'` : ''}
+              </p>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
+      <div className='flex flex-wrap items-center justify-between gap-3'>
+        <TabLinks tabs={tabs} activeKey={activeTab} />
+        {activeTab === 'lineups' && hasLineupPlayers(sides) ? (
+          <TabLinks tabs={lineupViewTabs} activeKey={lineupView} />
+        ) : null}
+      </div>
 
       {activeTab === 'lineups' ? (
-        <Lineups
-          sides={sides}
-          view={lineupView}
-          basePath={`/competitions/${competitionId}/matches/${matchId}`}
-        />
+        <Lineups sides={sides} view={lineupView} />
       ) : (
         <MatchSummary
           matchId={matchId}

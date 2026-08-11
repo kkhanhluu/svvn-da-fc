@@ -7,7 +7,6 @@ import {
 import { getShortPositionLabel } from '../../helpers/getPositionLabel';
 import { cn } from '../../lib/utils';
 import { PlayerAvatar } from '../player-avatar';
-import { TabLinks } from '../competitions/tab-links';
 import { Card } from '../ui/card';
 import { Pitch } from './pitch';
 
@@ -78,18 +77,13 @@ function SideCard({ side }: { side: SideLineup }) {
   );
 }
 
-export function Lineups({
-  sides,
-  view,
-  basePath,
-}: {
-  sides: SideLineup[];
-  view: string;
-  basePath: string;
-}) {
-  const hasPlayers = sides.some((side) => side.starters.length > 0);
+/** True once any starters have been recorded — otherwise there's nothing to switch views on. */
+export function hasLineupPlayers(sides: SideLineup[]): boolean {
+  return sides.some((side) => side.starters.length > 0);
+}
 
-  if (!hasPlayers) {
+export function Lineups({ sides, view }: { sides: SideLineup[]; view: string }) {
+  if (!hasLineupPlayers(sides)) {
     return (
       <p className='text-muted-foreground'>
         Chưa có đội hình nào được ghi cho trận đấu này.
@@ -97,26 +91,13 @@ export function Lineups({
     );
   }
 
-  const tabs = [
-    { key: 'pitch', label: 'Sơ đồ' },
-    { key: 'list', label: 'Danh sách' },
-  ].map((tab) => ({
-    ...tab,
-    href: `${basePath}?tab=lineups&view=${tab.key}`,
-  }));
-
-  return (
-    <div className='space-y-4'>
-      <TabLinks tabs={tabs} activeKey={view} />
-      {view === 'list' ? (
-        <div className='grid gap-4 lg:grid-cols-2 items-start'>
-          {sides.map((side) => (
-            <SideCard key={side.teamId} side={side} />
-          ))}
-        </div>
-      ) : (
-        <Pitch sides={sides} />
-      )}
+  return view === 'list' ? (
+    <div className='grid gap-4 lg:grid-cols-2 items-start'>
+      {sides.map((side) => (
+        <SideCard key={side.teamId} side={side} />
+      ))}
     </div>
+  ) : (
+    <Pitch sides={sides} />
   );
 }

@@ -26,7 +26,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -46,7 +45,6 @@ type EditPlayerFormValues = {
   firstName: string;
   shirtNumber: string;
   position: string;
-  score: string;
 };
 
 function toNullableNumber(value: string): number | null {
@@ -73,7 +71,6 @@ export function EditPlayerForm({
       // Existing rows hold free text ('Defender', stray spaces); normalise so
       // the select matches an option, and leave it empty when never set.
       position: player.position ? getPositionGroup(player.position) : '',
-      score: player.score?.toString() ?? '',
     },
   });
 
@@ -90,7 +87,6 @@ export function EditPlayerForm({
         first_name: values.firstName.trim(),
         shirt_number: toNullableNumber(values.shirtNumber),
         position: values.position || null,
-        score: toNullableNumber(values.score),
       })
       .eq('id', player.id)
       .select('id');
@@ -157,7 +153,7 @@ export function EditPlayerForm({
               />
             </div>
 
-            <div className='grid gap-4 sm:grid-cols-3'>
+            <div className='grid gap-4 sm:grid-cols-2'>
               <FormField
                 control={form.control}
                 name='shirtNumber'
@@ -194,20 +190,6 @@ export function EditPlayerForm({
                         ))}
                       </SelectContent>
                     </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='score'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Điểm đánh giá</FormLabel>
-                    <FormControl>
-                      <Input type='number' min='0' {...field} />
-                    </FormControl>
-                    <FormDescription>Dùng để chia đội.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

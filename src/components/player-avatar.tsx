@@ -19,7 +19,12 @@ export function PlayerAvatar({
 }) {
   return (
     <Avatar className={cn('h-8 w-8', className)}>
-      {avatarUrl ? <AvatarImage src={avatarUrl} alt={name} /> : null}
+      {avatarUrl ? (
+        // Portraits are cropped to a square; centering the crop tends to cut
+        // off foreheads, so anchor to the top instead — faces sit there far
+        // more often than at the bottom.
+        <AvatarImage src={avatarUrl} alt={name} className='object-top' />
+      ) : null}
       <AvatarFallback
         className={cn(
           'text-[11px] font-semibold text-muted-foreground',

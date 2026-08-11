@@ -19,13 +19,13 @@ export function TabLinks({
   activeKey: string;
 }) {
   return (
-    <div className='inline-flex h-9 items-center gap-1 rounded-lg bg-muted p-1'>
+    <div className='inline-flex h-11 items-center gap-1 rounded-lg bg-muted p-1.5'>
       {tabs.map((tab) => (
         <Link
           key={tab.key}
           href={tab.href}
           className={cn(
-            'inline-flex h-7 items-center rounded-md px-3 text-sm font-medium transition-colors',
+            'inline-flex h-8 items-center rounded-md px-4 text-sm font-medium transition-colors',
             tab.key === activeKey
               ? 'bg-background text-foreground shadow'
               : 'text-muted-foreground hover:text-foreground'

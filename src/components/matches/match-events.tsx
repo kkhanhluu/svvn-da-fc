@@ -1,7 +1,7 @@
 'use client';
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { X } from 'lucide-react';
+import { Footprints, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Database } from '../../../database.types';
@@ -11,6 +11,7 @@ import {
   showSuccessToast,
 } from '../../helpers/showNotifications';
 import { CompetitionTeam, MatchEvent, UserProfile } from '../../types';
+import { SoccerBall } from '../icons/soccer-ball';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
@@ -239,11 +240,17 @@ export function MatchEvents({
                 {EVENT_LABELS[event.type as EventType] ?? event.type}
               </Badge>
               <div className='flex-1 min-w-0'>
-                <p className='text-sm font-medium truncate'>
+                <p className='flex items-center gap-1.5 text-sm font-medium truncate'>
+                  {event.type === 'goal' ? (
+                    <SoccerBall className='h-3.5 w-3.5 flex-none text-muted-foreground' />
+                  ) : null}
                   {getEventTitle(event)}
                 </p>
                 {detail ? (
-                  <p className='text-sm text-muted-foreground truncate'>
+                  <p className='flex items-center gap-1.5 text-sm text-muted-foreground truncate'>
+                    {event.type === 'goal' ? (
+                      <Footprints className='h-3.5 w-3.5 flex-none' />
+                    ) : null}
                     {detail}
                   </p>
                 ) : null}
