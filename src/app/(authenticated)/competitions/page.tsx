@@ -26,7 +26,7 @@ export default async function CompetitionsPage() {
     );
 
   return (
-    <div className='h-full flex-1 flex-col space-y-8 p-8 md:p-16 flex'>
+    <div className='flex h-full flex-1 flex-col space-y-5 p-5 sm:space-y-8 sm:p-8 md:p-16'>
       <CompetitionsHeader isAdmin={profile?.role === 'ADMIN'} />
       <CompetitionList
         competitions={(competitions ?? []) as CompetitionWithTeams[]}

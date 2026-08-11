@@ -34,12 +34,12 @@ function TeamRow({
 }) {
   return (
     <div className='flex items-center gap-2.5'>
-      <span className='flex h-[22px] w-[22px] flex-none items-center justify-center rounded bg-muted text-[10px] font-semibold text-muted-foreground'>
+      <span className='flex h-6 w-6 flex-none items-center justify-center rounded bg-muted text-[10px] font-semibold text-muted-foreground sm:h-[22px] sm:w-[22px]'>
         {getTeamAbbr(name, abbr)}
       </span>
       <span
         className={cn(
-          'flex-1 text-sm truncate',
+          'flex-1 truncate text-[15px] sm:text-sm',
           isWinner && 'font-semibold text-green-600',
           isLoser && 'text-muted-foreground'
         )}
@@ -48,7 +48,7 @@ function TeamRow({
       </span>
       <span
         className={cn(
-          'w-7 text-right text-sm font-semibold',
+          'w-7 text-right text-[15px] font-semibold sm:text-sm',
           isWinner && 'text-green-600',
           isLoser && 'text-muted-foreground'
         )}
@@ -57,6 +57,23 @@ function TeamRow({
       </span>
     </div>
   );
+}
+
+/** Phone summary of a played match: "Svvnda thắng", "Hòa", or "Chưa đá". */
+function getResultLabel(match: MatchWithTeams): string {
+  if (!isPlayed(match)) {
+    return 'Chưa đá';
+  }
+
+  const homeScore = match.home_score ?? 0;
+  const awayScore = match.away_score ?? 0;
+
+  if (homeScore === awayScore) {
+    return 'Hòa';
+  }
+  return `${
+    homeScore > awayScore ? match.home_team.name : match.away_team.name
+  } thắng`;
 }
 
 export function MatchesTab({
@@ -76,11 +93,11 @@ export function MatchesTab({
     <div className='flex flex-col gap-4'>
       {groupByRound(matches).map(([round, roundMatches]) => (
         <Card key={round} className='overflow-hidden'>
-          <div className='flex items-center justify-between border-b px-5 py-3.5'>
+          <div className='flex items-center justify-between border-b px-4 py-3 sm:px-5 sm:py-3.5'>
             <p className='text-sm font-semibold'>
               {round === NO_ROUND ? 'Trận đấu khác' : `Vòng ${round}`}
             </p>
-            <p className='text-sm text-muted-foreground'>
+            <p className='text-xs text-muted-foreground sm:text-sm'>
               {roundMatches.length} trận
             </p>
           </div>
@@ -95,13 +112,26 @@ export function MatchesTab({
               <Link
                 key={match.id}
                 href={`/competitions/${competitionId}/matches/${match.id}`}
-                className='flex items-center gap-5 border-b px-5 py-3.5 last:border-b-0 hover:bg-muted/50 transition-colors'
+                className='block border-b px-4 py-3.5 transition-colors last:border-b-0 hover:bg-muted/50 sm:flex sm:items-center sm:gap-5 sm:px-5'
               >
-                <div className='w-[92px] flex-none text-sm text-muted-foreground'>
+                {/* Phone: date and outcome share one line above the teams.
+                    Desktop keeps them in a fixed column to the left. */}
+                <div className='mb-2.5 flex items-center justify-between gap-3 text-xs text-muted-foreground sm:mb-0 sm:block sm:w-[92px] sm:flex-none sm:text-sm'>
                   <p>{format(new Date(match.match_date), 'dd/MM/yy')}</p>
-                  <p className='font-semibold'>{played ? 'FT' : '—'}</p>
+                  <p
+                    className={cn(
+                      'truncate font-semibold sm:hidden',
+                      played && !homeWon && !awayWon && 'text-muted-foreground',
+                      (homeWon || awayWon) && 'text-green-600'
+                    )}
+                  >
+                    {getResultLabel(match)}
+                  </p>
+                  <p className='hidden font-semibold sm:block'>
+                    {played ? 'FT' : '—'}
+                  </p>
                 </div>
-                <div className='flex-1 min-w-0 flex flex-col gap-2'>
+                <div className='flex min-w-0 flex-1 flex-col gap-2'>
                   <TeamRow
                     name={match.home_team.name}
                     abbr={match.home_team.abbr}

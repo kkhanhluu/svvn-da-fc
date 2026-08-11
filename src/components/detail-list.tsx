@@ -16,17 +16,21 @@ export function DetailList({
   return (
     <Card className='overflow-hidden'>
       {title ? (
-        <div className='border-b px-5 py-3.5 text-sm font-semibold'>
+        <div className='border-b px-4 py-3 text-sm font-semibold sm:px-5 sm:py-3.5'>
           {title}
         </div>
       ) : null}
       {items.map((item) => (
         <div
           key={item.label}
-          className='flex items-center justify-between gap-4 border-b px-5 py-3 last:border-b-0'
+          className='flex items-center justify-between gap-4 border-b px-4 py-3 last:border-b-0 sm:px-5'
         >
-          <span className='text-sm text-muted-foreground'>{item.label}</span>
-          <span className='text-sm font-medium text-right'>{item.value}</span>
+          <span className='text-[13px] text-muted-foreground sm:text-sm'>
+            {item.label}
+          </span>
+          <span className='text-right text-[13px] font-medium sm:text-sm'>
+            {item.value}
+          </span>
         </div>
       ))}
     </Card>

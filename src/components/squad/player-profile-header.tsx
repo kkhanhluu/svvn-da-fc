@@ -23,32 +23,39 @@ export function PlayerProfileHeader({
 
   return (
     <div className='space-y-6'>
-      <div className='flex items-center gap-5'>
+      <div className='flex items-center gap-4 sm:gap-5'>
         {canEditAvatar ? (
           <AvatarUpload
             userId={player.id}
             name={name}
             avatarUrl={player.avatar_url}
-            className='h-[72px] w-[72px]'
-            fallbackClassName='text-xl'
+            className='h-16 w-16 sm:h-[72px] sm:w-[72px]'
+            fallbackClassName='text-lg sm:text-xl'
           />
         ) : (
           <PlayerAvatar
             name={name}
             avatarUrl={player.avatar_url}
-            className='h-[72px] w-[72px] flex-none'
-            fallbackClassName='text-xl'
+            className='h-16 w-16 flex-none sm:h-[72px] sm:w-[72px]'
+            fallbackClassName='text-lg sm:text-xl'
           />
         )}
-        <div className='flex-1 min-w-0'>
-          <h2 className='text-2xl font-bold tracking-tight'>{name}</h2>
-          <p className='text-muted-foreground'>
+        <div className='min-w-0 flex-1'>
+          <h2 className='truncate text-xl font-semibold tracking-tight sm:text-2xl sm:font-bold'>
+            {name}
+          </h2>
+          <p className='truncate text-[13px] text-muted-foreground sm:text-base'>
             Số {player.shirt_number ?? '–'} ·{' '}
             {getPositionLabel(player.position)}
           </p>
         </div>
         {isAdmin && !isEditing ? (
-          <Button variant='outline' onClick={() => setIsEditing(true)}>
+          <Button
+            variant='outline'
+            size='sm'
+            className='flex-none sm:h-10 sm:px-4'
+            onClick={() => setIsEditing(true)}
+          >
             Chỉnh sửa
           </Button>
         ) : null}

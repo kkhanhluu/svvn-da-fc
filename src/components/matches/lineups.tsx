@@ -22,8 +22,16 @@ function formatMarks(player: LineupPlayer): string {
 }
 
 function PlayerRow({ player }: { player: LineupPlayer }) {
-  const content = (
-    <>
+  const marks = formatMarks(player);
+
+  return (
+    <Link
+      href={`/squad/${player.userId}`}
+      className={cn(
+        'flex items-center gap-3 border-b px-4 py-2.5 last:border-b-0 sm:px-5',
+        'transition-colors hover:bg-muted/50'
+      )}
+    >
       <span className='w-6 flex-none text-sm font-semibold text-muted-foreground'>
         {player.shirtNumber ?? '–'}
       </span>
@@ -33,25 +41,17 @@ function PlayerRow({ player }: { player: LineupPlayer }) {
         className='h-7 w-7 flex-none'
         fallbackClassName='text-[10px]'
       />
-      <span className='flex-1 min-w-0 truncate text-sm'>{player.name}</span>
-      <span className='w-10 flex-none text-sm text-muted-foreground'>
+      <span className='min-w-0 flex-1 truncate text-sm'>{player.name}</span>
+      <span className='w-8 flex-none text-right text-xs text-muted-foreground sm:w-10 sm:text-left sm:text-sm'>
         {getShortPositionLabel(player.position)}
       </span>
-      <span className='w-24 flex-none text-right text-sm text-muted-foreground'>
-        {formatMarks(player)}
-      </span>
-    </>
-  );
-
-  return (
-    <Link
-      href={`/squad/${player.userId}`}
-      className={cn(
-        'flex items-center gap-3 border-b px-5 py-2.5 last:border-b-0',
-        'hover:bg-muted/50 transition-colors'
+      {marks ? (
+        <span className='flex-none text-right text-xs text-muted-foreground sm:w-24 sm:text-sm'>
+          {marks}
+        </span>
+      ) : (
+        <span className='hidden w-24 flex-none sm:block' />
       )}
-    >
-      {content}
     </Link>
   );
 }
@@ -59,9 +59,9 @@ function PlayerRow({ player }: { player: LineupPlayer }) {
 function SideCard({ side }: { side: SideLineup }) {
   return (
     <Card className='overflow-hidden'>
-      <div className='flex items-center justify-between border-b px-5 py-3.5'>
-        <p className='text-sm font-semibold'>{side.teamName}</p>
-        <p className='text-sm text-muted-foreground'>
+      <div className='flex items-center justify-between border-b px-4 py-3 sm:px-5 sm:py-3.5'>
+        <p className='truncate text-sm font-semibold'>{side.teamName}</p>
+        <p className='flex-none text-[13px] text-muted-foreground sm:text-sm'>
           {getFormation(side.starters)}
         </p>
       </div>
@@ -69,7 +69,7 @@ function SideCard({ side }: { side: SideLineup }) {
         <PlayerRow key={player.key} player={player} />
       ))}
       {side.bench.length > 0 ? (
-        <div className='border-t px-5 py-3 text-sm text-muted-foreground'>
+        <div className='border-t px-4 py-3 text-[13px] text-muted-foreground sm:px-5 sm:text-sm'>
           Dự bị: {side.bench.map((player) => player.name).join(', ')}
         </div>
       ) : null}

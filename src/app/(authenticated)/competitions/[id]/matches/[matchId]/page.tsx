@@ -35,6 +35,23 @@ const EVENT_SELECT =
 const LINEUP_SELECT =
   '*, users(first_name, last_name, position, shirt_number, avatar_url)';
 
+/** Caption under the score: "Svvnda thắng" reads better than "Kết thúc". */
+function getOutcomeLabel(
+  match: { home_score: number | null; away_score: number | null },
+  homeTeam?: CompetitionTeam,
+  awayTeam?: CompetitionTeam
+): string {
+  const homeScore = match.home_score ?? 0;
+  const awayScore = match.away_score ?? 0;
+
+  if (homeScore === awayScore) {
+    return 'Hòa';
+  }
+
+  const winner = homeScore > awayScore ? homeTeam : awayTeam;
+  return winner ? `${winner.name} thắng` : 'Kết thúc';
+}
+
 export default async function MatchDetailPage({
   params,
   searchParams,
@@ -187,36 +204,50 @@ export default async function MatchDetailPage({
   const awayWon = played && (match.away_score ?? 0) > (match.home_score ?? 0);
 
   return (
-    <div className='h-full flex-1 flex-col space-y-6 p-8 md:p-16 flex'>
+    <div className='flex h-full flex-1 flex-col space-y-5 p-5 sm:space-y-6 sm:p-8 md:p-16'>
       <Link
         href={`/competitions/${competitionId}`}
-        className='text-sm text-muted-foreground hover:text-foreground'
+        // flex-none: `truncate` zeroes the automatic minimum size, so without
+        // it this row collapses when the page runs taller than the viewport.
+        className='flex-none truncate text-sm text-muted-foreground hover:text-foreground'
       >
         ← {match.competitions?.name ?? 'Giải đấu'}
       </Link>
 
-      <div className='flex items-center justify-center gap-6 md:gap-10'>
-        <div className='flex flex-1 items-center justify-end gap-3 min-w-0'>
+      {/* Phone: crest above team name on each side, score in a tinted box in
+          the middle. Desktop keeps the single centred row. */}
+      <div className='grid grid-cols-[1fr_auto_1fr] items-center justify-center gap-3 sm:flex sm:gap-6 md:gap-10'>
+        <div className='flex min-w-0 flex-1 flex-col-reverse items-center gap-2 sm:flex-row sm:justify-end sm:gap-3'>
           <span
             className={cn(
-              'text-lg font-semibold truncate text-right',
-              homeWon && 'text-green-600'
+              'w-full truncate text-center text-sm font-semibold sm:w-auto sm:text-right sm:text-lg',
+              homeWon && 'text-green-600',
+              awayWon && 'text-muted-foreground'
             )}
           >
             {homeTeam?.name}
           </span>
-          <span className='flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-muted text-xs font-semibold text-muted-foreground'>
+          <span className='flex h-12 w-12 flex-none items-center justify-center rounded-[10px] bg-muted text-sm font-semibold text-muted-foreground sm:h-10 sm:w-10 sm:rounded-lg sm:text-xs'>
             {homeTeam ? getTeamAbbr(homeTeam.name, homeTeam.abbr) : ''}
           </span>
         </div>
         <div className='text-center'>
-          <p className='text-3xl font-bold tracking-tight whitespace-nowrap'>
+          <p
+            className={cn(
+              'inline-flex items-baseline gap-2 whitespace-nowrap rounded-[10px] px-3.5 py-1 text-3xl font-bold tracking-tight sm:gap-0 sm:rounded-none sm:bg-transparent sm:px-0 sm:py-0',
+              played && (homeWon || awayWon)
+                ? 'bg-green-50 dark:bg-green-950/40'
+                : 'bg-muted'
+            )}
+          >
             {played ? (
               <>
                 <span className={cn(homeWon && 'text-green-600')}>
                   {match.home_score}
                 </span>
-                <span className='text-muted-foreground'> – </span>
+                <span className='text-xl text-muted-foreground sm:text-3xl'>
+                  {' – '}
+                </span>
                 <span className={cn(awayWon && 'text-green-600')}>
                   {match.away_score}
                 </span>
@@ -225,19 +256,27 @@ export default async function MatchDetailPage({
               'vs'
             )}
           </p>
-          <p className='text-sm text-muted-foreground whitespace-nowrap'>
-            {played ? 'Kết thúc' : 'Chưa diễn ra'}
-            {match.round != null ? ` · Vòng ${match.round}` : ''}
+          <p
+            className={cn(
+              'mt-1.5 whitespace-nowrap text-xs font-medium sm:mt-0 sm:text-sm sm:font-normal sm:text-muted-foreground',
+              homeWon || awayWon ? 'text-green-600' : 'text-muted-foreground'
+            )}
+          >
+            {played ? getOutcomeLabel(match, homeTeam, awayTeam) : 'Chưa diễn ra'}
+            {match.round != null ? (
+              <span className='hidden sm:inline'>{` · Vòng ${match.round}`}</span>
+            ) : null}
           </p>
         </div>
-        <div className='flex flex-1 items-center gap-3 min-w-0'>
-          <span className='flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-muted text-xs font-semibold text-muted-foreground'>
+        <div className='flex min-w-0 flex-1 flex-col items-center gap-2 sm:flex-row sm:gap-3'>
+          <span className='flex h-12 w-12 flex-none items-center justify-center rounded-[10px] bg-muted text-sm font-semibold text-muted-foreground sm:h-10 sm:w-10 sm:rounded-lg sm:text-xs'>
             {awayTeam ? getTeamAbbr(awayTeam.name, awayTeam.abbr) : ''}
           </span>
           <span
             className={cn(
-              'text-lg font-semibold truncate',
-              awayWon && 'text-green-600'
+              'w-full truncate text-center text-sm font-semibold sm:w-auto sm:text-left sm:text-lg',
+              awayWon && 'text-green-600',
+              homeWon && 'text-muted-foreground'
             )}
           >
             {awayTeam?.name}
@@ -246,7 +285,7 @@ export default async function MatchDetailPage({
       </div>
 
       {homeGoals.length > 0 || awayGoals.length > 0 ? (
-        <div className='flex items-start justify-center gap-6 md:gap-10 -mt-2'>
+        <div className='-mt-2 grid grid-cols-[1fr_auto_1fr] items-start justify-center gap-3 sm:flex sm:gap-6 md:gap-10'>
           <div className='flex flex-1 flex-col items-end gap-0.5'>
             {homeGoals.map((goal) => (
               <p
@@ -258,7 +297,7 @@ export default async function MatchDetailPage({
               </p>
             ))}
           </div>
-          <div className='w-10 flex-none' />
+          <div className='w-12 flex-none sm:w-10' />
           <div className='flex flex-1 flex-col items-start gap-0.5'>
             {awayGoals.map((goal) => (
               <p
@@ -274,9 +313,9 @@ export default async function MatchDetailPage({
       ) : null}
 
       <div className='flex flex-wrap items-center justify-between gap-3'>
-        <TabLinks tabs={tabs} activeKey={activeTab} />
+        <TabLinks tabs={tabs} activeKey={activeTab} fill />
         {activeTab === 'lineups' && hasLineupPlayers(sides) ? (
-          <TabLinks tabs={lineupViewTabs} activeKey={lineupView} />
+          <TabLinks tabs={lineupViewTabs} activeKey={lineupView} fill />
         ) : null}
       </div>
 

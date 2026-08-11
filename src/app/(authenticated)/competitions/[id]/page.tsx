@@ -53,7 +53,7 @@ export default async function CompetitionDetailPage({
   }));
 
   return (
-    <div className='h-full flex-1 flex-col space-y-6 p-8 md:p-16 flex'>
+    <div className='flex h-full flex-1 flex-col space-y-5 p-5 sm:space-y-6 sm:p-8 md:p-16'>
       <Link
         href='/competitions'
         className='text-sm text-muted-foreground hover:text-foreground'
@@ -61,22 +61,23 @@ export default async function CompetitionDetailPage({
         ← Giải đấu
       </Link>
 
-      <div className='flex items-center gap-4'>
-        <div className='flex h-12 w-12 flex-none items-center justify-center rounded-lg bg-muted text-sm font-semibold text-muted-foreground'>
+      <div className='flex items-center gap-3 sm:gap-4'>
+        <div className='flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-muted text-[13px] font-semibold text-muted-foreground sm:h-12 sm:w-12 sm:text-sm'>
           {getTeamAbbr(competition.name)}
         </div>
-        <div className='flex-1 min-w-0'>
-          <h2 className='text-2xl font-bold tracking-tight'>
+        <div className='min-w-0 flex-1'>
+          <h2 className='truncate text-[17px] font-semibold tracking-tight sm:text-2xl sm:font-bold'>
             {competition.name}
           </h2>
-          <p className='text-muted-foreground'>
+          <p className='truncate text-[13px] text-muted-foreground sm:text-base'>
             {getCompetitionMeta(competition, teams.length)}
           </p>
         </div>
         {profile?.role === 'ADMIN' ? (
-          <Button asChild>
+          <Button asChild size='sm' className='flex-none sm:h-10 sm:px-4'>
             <Link href={`/competitions/${competitionId}/matches/new`}>
-              Thêm trận đấu
+              <span className='sm:hidden'>+ Trận</span>
+              <span className='hidden sm:inline'>Thêm trận đấu</span>
             </Link>
           </Button>
         ) : null}

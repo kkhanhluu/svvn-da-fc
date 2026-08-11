@@ -1,11 +1,6 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@radix-ui/react-tooltip';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import {
   Calendar,
@@ -26,7 +21,6 @@ import {
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useMediaQuery } from 'react-responsive';
 import { getFullName } from '../helpers/playerName';
 import { UserProfile } from '../types';
 import { PlayerAvatar } from './player-avatar';
@@ -47,7 +41,7 @@ interface NavProps {
 
 // Đăng ký/Giải đấu/Đội hình are what members check day to day; Thông báo is
 // a secondary feed, so it sits last in this group instead of first.
-const USER_LINKS = [
+export const USER_LINKS = [
   {
     title: 'Đăng ký',
     icon: Calendar,
@@ -145,16 +139,7 @@ function AccountMenu({
   user: UserProfile;
   isAdmin: boolean;
 }) {
-  const { setTheme, theme } = useTheme();
-  const supabase = createClientComponentClient();
-  const router = useRouter();
-
   const displayName = getFullName(user) || user.email || 'Tài khoản';
-
-  async function signOut() {
-    await supabase.auth.signOut();
-    router.replace('/');
-  }
 
   return (
     <DropdownMenu>
@@ -179,45 +164,83 @@ function AccountMenu({
           <ChevronsUpDown className='hidden h-4 w-4 flex-none text-muted-foreground md:block' />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent side='top' align='start' className='w-64'>
-        <DropdownMenuLabel className='font-normal'>
-          <p className='truncate text-sm font-medium'>{user.email}</p>
-          <p className='text-xs text-muted-foreground'>
-            {isAdmin ? 'Quản trị viên hệ thống' : 'Thành viên'}
-          </p>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {ACCOUNT_LINKS.map((link) => (
-          <DropdownMenuItem asChild key={link.href} className='cursor-pointer'>
-            <Link href={link.href} className='flex items-center gap-2'>
-              <link.icon className='h-4 w-4' />
-              {link.title}
-            </Link>
-          </DropdownMenuItem>
-        ))}
-        <DropdownMenuItem
-          // Toggling the theme shouldn't dismiss the menu the way navigating
-          // away does — the user is likely to check both modes in a row.
-          onSelect={(event) => {
-            event.preventDefault();
-            setTheme(theme === 'light' ? 'dark' : 'light');
-          }}
-          className='flex cursor-pointer items-center gap-2'
-        >
-          <SunIcon className='h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0' />
-          <MoonIcon className='absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100' />
-          {theme === 'light' ? 'Dark mode' : 'Light mode'}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onSelect={signOut}
-          className='flex cursor-pointer items-center gap-2 text-destructive focus:text-destructive'
-        >
-          <LogOut className='h-4 w-4' />
-          Đăng xuất
-        </DropdownMenuItem>
-      </DropdownMenuContent>
+      <AccountMenuContent user={user} isAdmin={isAdmin} />
     </DropdownMenu>
+  );
+}
+
+/**
+ * Body of the account menu, shared by the sidebar and — since the mobile tab
+ * bar has no sidebar to fall back on — by the "Tài khoản" tab, which is the
+ * only way to reach the admin and account pages on a phone.
+ */
+export function AccountMenuContent({
+  user,
+  isAdmin,
+  align = 'start',
+  showSecondaryLinks = false,
+}: {
+  user: UserProfile;
+  isAdmin: boolean;
+  align?: 'start' | 'end';
+  showSecondaryLinks?: boolean;
+}) {
+  const { setTheme, theme } = useTheme();
+  const supabase = createClientComponentClient();
+  const router = useRouter();
+
+  async function signOut() {
+    await supabase.auth.signOut();
+    router.replace('/');
+  }
+
+  const links = showSecondaryLinks
+    ? [
+        ...(isAdmin ? ADMIN_LINKS : []),
+        { title: 'Thông báo', icon: Mail, href: '/notification' },
+        ...ACCOUNT_LINKS,
+      ]
+    : ACCOUNT_LINKS;
+
+  return (
+    <DropdownMenuContent side='top' align={align} className='w-64'>
+      <DropdownMenuLabel className='font-normal'>
+        <p className='truncate text-sm font-medium'>{user.email}</p>
+        <p className='text-xs text-muted-foreground'>
+          {isAdmin ? 'Quản trị viên hệ thống' : 'Thành viên'}
+        </p>
+      </DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      {links.map((link) => (
+        <DropdownMenuItem asChild key={link.href} className='cursor-pointer'>
+          <Link href={link.href} className='flex items-center gap-2'>
+            <link.icon className='h-4 w-4' />
+            {link.title}
+          </Link>
+        </DropdownMenuItem>
+      ))}
+      <DropdownMenuItem
+        // Toggling the theme shouldn't dismiss the menu the way navigating
+        // away does — the user is likely to check both modes in a row.
+        onSelect={(event) => {
+          event.preventDefault();
+          setTheme(theme === 'light' ? 'dark' : 'light');
+        }}
+        className='flex cursor-pointer items-center gap-2'
+      >
+        <SunIcon className='h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0' />
+        <MoonIcon className='absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100' />
+        {theme === 'light' ? 'Dark mode' : 'Light mode'}
+      </DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem
+        onSelect={signOut}
+        className='flex cursor-pointer items-center gap-2 text-destructive focus:text-destructive'
+      >
+        <LogOut className='h-4 w-4' />
+        Đăng xuất
+      </DropdownMenuItem>
+    </DropdownMenuContent>
   );
 }
 
@@ -233,7 +256,6 @@ function NavItemLink({
   };
 }) {
   const pathname = usePathname();
-  const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
   // Competitions and squad have detail pages, so they stay highlighted while
   // browsing a match or a player. The other links have no nested routes.
@@ -244,36 +266,9 @@ function NavItemLink({
       pathname.startsWith(`${link.href}/`));
   const variant = isCurrentPath ? 'default' : 'ghost';
 
-  if (isMobile) {
-    return (
-      <Tooltip delayDuration={0}>
-        <TooltipTrigger asChild>
-          <Link
-            href={link.href ?? '#'}
-            className={cn(
-              buttonVariants({
-                variant,
-                size: 'icon',
-              }),
-              'h-9 w-9',
-              isCurrentPath &&
-                'dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white'
-            )}
-          >
-            <link.icon className='h-4 w-4' />
-            <span className='sr-only'>{link.title}</span>
-          </Link>
-        </TooltipTrigger>
-        <TooltipContent side='right' className='flex items-center gap-4'>
-          {link.title}
-          {link.label && (
-            <span className='ml-auto text-muted-foreground'>{link.label}</span>
-          )}
-        </TooltipContent>
-      </Tooltip>
-    );
-  }
-
+  // The icon-only variant this used to render below `md` is gone with the
+  // sidebar itself: phones get the bottom tab bar instead. It also decided the
+  // markup from a media query, which never matched the server render.
   return (
     <Link
       href={link.href ?? '#'}

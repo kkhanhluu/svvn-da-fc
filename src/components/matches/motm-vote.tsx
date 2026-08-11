@@ -100,9 +100,11 @@ export function MotmVote({
 
   return (
     <Card className='overflow-hidden'>
-      <div className='flex items-center justify-between border-b px-5 py-3.5'>
+      <div className='flex items-center justify-between border-b px-4 py-3 sm:px-5 sm:py-3.5'>
         <p className='text-sm font-semibold'>Cầu thủ xuất sắc nhất</p>
-        <p className='text-sm text-muted-foreground'>{total} lượt</p>
+        <p className='text-xs text-muted-foreground sm:text-sm'>
+          {total} lượt
+        </p>
       </div>
       <div className='divide-y'>
         {ranked.map((candidate) => {
@@ -111,22 +113,30 @@ export function MotmVote({
           const isMyVote = candidate.key === myVoteKey;
 
           return (
+            // Phone: name and share on one line with the bar underneath.
+            // `sm:contents` flattens the wrapper back into one desktop row,
+            // where `order` puts the bar between the name and the share.
             <button
               key={candidate.key}
               type='button'
               onClick={() => vote(candidate)}
               disabled={isVoting}
-              className='flex w-full items-center gap-4 px-5 py-3 text-left hover:bg-muted/50 transition-colors'
+              className='block w-full px-4 py-3 text-left transition-colors hover:bg-muted/50 sm:flex sm:items-center sm:gap-4 sm:px-5'
             >
-              <span
-                className={cn(
-                  'flex-1 min-w-0 truncate text-sm',
-                  isMyVote && 'font-semibold'
-                )}
-              >
-                {candidate.name}
+              <span className='flex items-center justify-between gap-3 sm:contents'>
+                <span
+                  className={cn(
+                    'min-w-0 truncate text-[13px] sm:order-1 sm:flex-1 sm:text-sm',
+                    isMyVote && 'font-semibold'
+                  )}
+                >
+                  {candidate.name}
+                </span>
+                <span className='flex-none text-[13px] text-muted-foreground sm:order-3 sm:w-10 sm:text-right sm:text-sm'>
+                  {percentage}%
+                </span>
               </span>
-              <span className='h-1.5 w-24 flex-none overflow-hidden rounded-full bg-muted'>
+              <span className='mt-1.5 block h-2 w-full overflow-hidden rounded-full bg-muted sm:order-2 sm:mt-0 sm:h-1.5 sm:w-24 sm:flex-none'>
                 <span
                   className={cn(
                     'block h-full rounded-full',
@@ -135,14 +145,11 @@ export function MotmVote({
                   style={{ width: `${percentage}%` }}
                 />
               </span>
-              <span className='w-10 flex-none text-right text-sm text-muted-foreground'>
-                {percentage}%
-              </span>
             </button>
           );
         })}
       </div>
-      <p className='border-t px-5 py-3 text-sm text-muted-foreground'>
+      <p className='border-t px-4 py-3 text-xs text-muted-foreground sm:px-5 sm:text-sm'>
         {myVote
           ? `Bạn đã bình chọn cho ${
               ranked.find((candidate) => candidate.key === myVoteKey)?.name ??

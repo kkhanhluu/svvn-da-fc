@@ -32,9 +32,11 @@ export function MatchSummary({
         canEdit={canEdit}
       />
 
+      {/* Voting sits above the fixture details: it is the one card here the
+          reader can act on, and on a phone everything is a single column. */}
       <div className='space-y-4'>
-        <DetailList items={infoItems} title='Thông tin trận đấu' />
         {motm}
+        <DetailList items={infoItems} title='Thông tin trận đấu' />
       </div>
     </div>
   );

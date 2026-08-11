@@ -210,7 +210,7 @@ export function MatchEvents({
 
   return (
     <Card className='overflow-hidden'>
-      <div className='border-b px-5 py-3.5 text-sm font-semibold'>
+      <div className='border-b px-4 py-3 text-sm font-semibold sm:px-5 sm:py-3.5'>
         Diễn biến trận đấu
       </div>
 
@@ -228,26 +228,28 @@ export function MatchEvents({
           return (
             <div
               key={event.id}
-              className='flex items-center gap-4 border-b px-5 py-3 last:border-b-0'
+              className='flex items-center gap-3 border-b px-4 py-3 last:border-b-0 sm:gap-4 sm:px-5'
             >
-              <span className='w-10 flex-none text-sm font-semibold text-muted-foreground'>
+              <span className='w-8 flex-none text-[13px] font-semibold text-muted-foreground sm:w-10 sm:text-sm'>
                 {event.minute != null ? `${event.minute}'` : '—'}
               </span>
+              {/* The type badge is the first thing to go on a phone — the ball
+                  icon already marks goals, and the detail line says the rest. */}
               <Badge
                 variant={event.type === 'goal' ? 'default' : 'secondary'}
-                className='flex-none'
+                className='hidden flex-none sm:inline-flex'
               >
                 {EVENT_LABELS[event.type as EventType] ?? event.type}
               </Badge>
-              <div className='flex-1 min-w-0'>
-                <p className='flex items-center gap-1.5 text-sm font-medium truncate'>
+              <div className='min-w-0 flex-1'>
+                <p className='flex items-center gap-1.5 truncate text-sm font-medium'>
                   {event.type === 'goal' ? (
                     <SoccerBall className='h-3.5 w-3.5 flex-none text-muted-foreground' />
                   ) : null}
                   {getEventTitle(event)}
                 </p>
                 {detail ? (
-                  <p className='flex items-center gap-1.5 text-sm text-muted-foreground truncate'>
+                  <p className='flex items-center gap-1.5 truncate text-xs text-muted-foreground sm:text-sm'>
                     {event.type === 'goal' ? (
                       <Footprints className='h-3.5 w-3.5 flex-none' />
                     ) : null}

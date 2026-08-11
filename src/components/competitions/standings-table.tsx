@@ -20,52 +20,77 @@ export function StandingsTable({ standings }: { standings: Standing[] }) {
   }
 
   return (
-    <Card className='overflow-hidden'>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className='w-12'>#</TableHead>
-            <TableHead>Đội</TableHead>
-            <TableHead className='text-center w-12'>Trận</TableHead>
-            <TableHead className='text-center w-12'>T</TableHead>
-            <TableHead className='text-center w-12'>H</TableHead>
-            <TableHead className='text-center w-12'>B</TableHead>
-            <TableHead className='text-center w-20'>Bàn</TableHead>
-            <TableHead className='text-center w-16'>HS</TableHead>
-            <TableHead className='text-right w-16'>Điểm</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {standings.map((standing, index) => (
-            <TableRow
-              key={standing.team_id}
-              className={cn(standing.is_own_team && 'bg-muted/50')}
-            >
-              <TableCell className='text-muted-foreground'>
-                {index + 1}
-              </TableCell>
-              <TableCell
-                className={cn(standing.is_own_team && 'font-semibold')}
-              >
-                {standing.team_name}
-              </TableCell>
-              <TableCell className='text-center'>{standing.played}</TableCell>
-              <TableCell className='text-center'>{standing.won}</TableCell>
-              <TableCell className='text-center'>{standing.drawn}</TableCell>
-              <TableCell className='text-center'>{standing.lost}</TableCell>
-              <TableCell className='text-center'>
-                {standing.goals_for}:{standing.goals_against}
-              </TableCell>
-              <TableCell className='text-center'>
-                {formatGoalDiff(standing.goal_diff)}
-              </TableCell>
-              <TableCell className='text-right font-semibold'>
-                {standing.points}
-              </TableCell>
+    <div>
+      <Card className='overflow-hidden'>
+        <Table>
+          <TableHeader>
+            {/* Trận and Bàn drop out on a phone — the remaining columns are the
+              ones the table is read for, and they fit 390px without scrolling. */}
+            <TableRow>
+              <TableHead className='w-8 pl-4 sm:w-12 sm:pl-2'>#</TableHead>
+              <TableHead>Đội</TableHead>
+              <TableHead className='hidden w-12 text-center sm:table-cell'>
+                Trận
+              </TableHead>
+              <TableHead className='w-8 text-center sm:w-12'>T</TableHead>
+              <TableHead className='w-8 text-center sm:w-12'>H</TableHead>
+              <TableHead className='w-8 text-center sm:w-12'>B</TableHead>
+              <TableHead className='hidden w-20 text-center sm:table-cell'>
+                Bàn
+              </TableHead>
+              <TableHead className='w-10 text-center sm:w-16'>HS</TableHead>
+              <TableHead className='w-10 pr-4 text-right sm:w-16 sm:pr-2'>
+                <span className='sm:hidden'>Đ</span>
+                <span className='hidden sm:inline'>Điểm</span>
+              </TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </Card>
+          </TableHeader>
+          <TableBody>
+            {standings.map((standing, index) => (
+              <TableRow
+                key={standing.team_id}
+                className={cn(standing.is_own_team && 'bg-muted/50')}
+              >
+                <TableCell className='py-3.5 pl-4 text-muted-foreground sm:pl-2'>
+                  {index + 1}
+                </TableCell>
+                <TableCell
+                  className={cn(
+                    'py-3.5 truncate',
+                    standing.is_own_team && 'font-semibold'
+                  )}
+                >
+                  {standing.team_name}
+                </TableCell>
+                <TableCell className='hidden py-3.5 text-center sm:table-cell'>
+                  {standing.played}
+                </TableCell>
+                <TableCell className='py-3.5 text-center'>
+                  {standing.won}
+                </TableCell>
+                <TableCell className='py-3.5 text-center'>
+                  {standing.drawn}
+                </TableCell>
+                <TableCell className='py-3.5 text-center'>
+                  {standing.lost}
+                </TableCell>
+                <TableCell className='hidden py-3.5 text-center sm:table-cell'>
+                  {standing.goals_for}:{standing.goals_against}
+                </TableCell>
+                <TableCell className='py-3.5 text-center text-muted-foreground sm:text-foreground'>
+                  {formatGoalDiff(standing.goal_diff)}
+                </TableCell>
+                <TableCell className='py-3.5 pr-4 text-right font-semibold sm:pr-2'>
+                  {standing.points}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Card>
+      <p className='mt-3 text-xs text-muted-foreground'>
+        Thắng 3 điểm · Hòa 1 điểm.
+      </p>
+    </div>
   );
 }
