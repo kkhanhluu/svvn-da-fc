@@ -4,7 +4,6 @@ import type { Metadata } from 'next';
 import { Inter as FontSans } from 'next/font/google';
 import { cookies } from 'next/headers';
 import AuthProvider from '../components/auth/authProvider';
-import { ThemeProvider } from '../components/theme-provider';
 import { Toaster } from '../components/ui/toaster';
 import { cn } from '../lib/utils';
 import './globals.css';
@@ -31,20 +30,15 @@ export default async function RootLayout({
   } = await supabase.auth.getSession();
 
   return (
-    <html lang='en'>
+    // The app is light-only: no theme provider, and color-scheme keeps native
+    // controls light even when the device is set to dark.
+    <html lang='en' className='light'>
       <body
         className={cn('bg-background font-sans antialiased', fontSans.variable)}
       >
         <Analytics />
         <AuthProvider accessToken={session?.access_token}>
-          <ThemeProvider
-            attribute='class'
-            defaultTheme='system'
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
+          {children}
         </AuthProvider>
         <Toaster />
       </body>

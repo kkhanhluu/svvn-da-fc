@@ -17,7 +17,10 @@ export function AuthenticatedLayoutComponent({
   children,
 }: PropsWithChildren<AuthenticatedLayoutProps>) {
   return (
-    <div className='h-screen overflow-hidden'>
+    // 100dvh, not 100vh: on mobile Safari 100vh is the toolbar-less height, so
+    // the last ~100px of the scroll area sat behind the browser chrome and
+    // could never be scrolled into view.
+    <div className='h-[100dvh] overflow-hidden'>
       <TooltipProvider delayDuration={0}>
         <PanelGroup
           direction='horizontal'
@@ -46,8 +49,9 @@ export function AuthenticatedLayoutComponent({
                 class on the panel can't override it) — this inner box is
                 what actually scrolls, keeping the sidebar and the account
                 menu pinned to its bottom on screen regardless of page length.
-                The bottom padding clears the mobile tab bar. */}
-            <div className='h-full overflow-y-auto pb-24 md:pb-0'>
+                The bottom padding clears the mobile tab bar, whose own height
+                grows with the device's safe area. */}
+            <div className='h-full overflow-y-auto pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-0'>
               {children}
             </div>
           </Panel>

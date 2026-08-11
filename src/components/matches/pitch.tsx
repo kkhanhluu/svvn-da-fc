@@ -285,12 +285,12 @@ function DesktopPitch({
         </div>
       ) : null}
 
-      <div className='bg-green-700/10 px-4 py-2 dark:bg-green-500/10'>
-        <div className='relative h-[640px] overflow-hidden border border-white dark:border-white/15'>
-          <div className='absolute left-0 right-0 top-1/2 border-t border-white dark:border-white/15' />
-          <div className='absolute left-1/2 top-1/2 h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white dark:border-white/15' />
-          <div className='absolute left-1/2 top-0 h-[12%] w-[20%] -translate-x-1/2 border-x border-b border-white dark:border-white/15' />
-          <div className='absolute bottom-0 left-1/2 h-[12%] w-[20%] -translate-x-1/2 border-x border-t border-white dark:border-white/15' />
+      <div className='bg-green-700/10 px-4 py-2'>
+        <div className='relative h-[640px] overflow-hidden border border-white'>
+          <div className='absolute left-0 right-0 top-1/2 border-t border-white' />
+          <div className='absolute left-1/2 top-1/2 h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white' />
+          <div className='absolute left-1/2 top-0 h-[12%] w-[20%] -translate-x-1/2 border-x border-b border-white' />
+          <div className='absolute bottom-0 left-1/2 h-[12%] w-[20%] -translate-x-1/2 border-x border-t border-white' />
 
           {sides.map((side, sideIndex) => {
             const isHome = sideIndex === 0;

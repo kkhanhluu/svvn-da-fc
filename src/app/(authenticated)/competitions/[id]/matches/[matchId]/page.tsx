@@ -236,7 +236,7 @@ export default async function MatchDetailPage({
             className={cn(
               'inline-flex items-baseline gap-2 whitespace-nowrap rounded-[10px] px-3.5 py-1 text-3xl font-bold tracking-tight sm:gap-0 sm:rounded-none sm:bg-transparent sm:px-0 sm:py-0',
               played && (homeWon || awayWon)
-                ? 'bg-green-50 dark:bg-green-950/40'
+                ? 'bg-green-50'
                 : 'bg-muted'
             )}
           >

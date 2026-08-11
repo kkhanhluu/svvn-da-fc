@@ -69,11 +69,13 @@ export default async function EventsPage() {
   });
 
   return (
-    <div className='overflow-y-scroll flex-col space-y-8 md:p-16 md:mt-10 md:flex'>
+    <div className='flex flex-col space-y-6 p-5 sm:p-8 md:mt-10 md:space-y-8 md:p-16'>
       <Alert variant='destructive'>
         <AlertCircle className='h-4 w-4' />
         <AlertTitle>Nội quy đội bóng FC SVVN Darmstadt</AlertTitle>
-        <AlertDescription>
+        {/* The rules are one long wall of text; the child selectors give each
+            section a heading weight and some air without touching the copy. */}
+        <AlertDescription className='[&_h4]:mt-3 [&_h4]:font-semibold [&_li]:mt-1 [&_li]:leading-snug'>
           <h4>Tham Gia Buổi Đá Bóng:</h4>
           <ul>
             <li>
@@ -133,13 +135,13 @@ export default async function EventsPage() {
           </ul>
         </AlertDescription>
       </Alert>
-      <div className='flex items-center justify-between space-y-2 mb-8'>
-        <div>
-          <h2 className='text-2xl font-bold tracking-tight'>Xin chào!</h2>
-          <p className='text-muted-foreground'>
-            Đây là danh sách các buổi đá bóng của bạn trong tuần này.
-          </p>
-        </div>
+      <div>
+        <h2 className='text-[22px] font-semibold tracking-tight sm:text-2xl sm:font-bold'>
+          Xin chào!
+        </h2>
+        <p className='text-[13px] text-muted-foreground sm:text-base'>
+          Đây là danh sách các buổi đá bóng của bạn trong tuần này.
+        </p>
       </div>
       <EventTable events={eventsWithAttendees} userId={user?.id ?? ''} />
     </div>
