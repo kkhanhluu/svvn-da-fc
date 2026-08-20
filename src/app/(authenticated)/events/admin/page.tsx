@@ -51,7 +51,7 @@ export default async function EventsPage() {
   });
 
   return (
-    <div className='hidden h-full flex-1 flex-col space-y-8 p-8 md:flex'>
+    <div className='flex h-full flex-1 flex-col space-y-8 p-4 md:p-8'>
       <EventsHeader />
       <EventTableForAdmin events={eventsWithAttendees} />
     </div>
