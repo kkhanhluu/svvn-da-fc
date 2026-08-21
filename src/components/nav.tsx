@@ -10,12 +10,15 @@ import {
   LogOut,
   LucideIcon,
   Mail,
+  MoonIcon,
   Settings,
+  SunIcon,
   Trophy,
   User,
   UserPlus,
   Users,
 } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { getFullName } from '../helpers/playerName';
@@ -184,6 +187,7 @@ export function AccountMenuContent({
 }) {
   const supabase = createClientComponentClient();
   const router = useRouter();
+  const { setTheme, theme } = useTheme();
 
   async function signOut() {
     await supabase.auth.signOut();
@@ -215,6 +219,19 @@ export function AccountMenuContent({
           </Link>
         </DropdownMenuItem>
       ))}
+      <DropdownMenuItem
+        // Toggling the theme shouldn't dismiss the menu the way navigating
+        // away does — the user is likely to check both modes in a row.
+        onSelect={(event) => {
+          event.preventDefault();
+          setTheme(theme === 'light' ? 'dark' : 'light');
+        }}
+        className='flex cursor-pointer items-center gap-2'
+      >
+        <SunIcon className='h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0' />
+        <MoonIcon className='absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100' />
+        {theme === 'light' ? 'Dark mode' : 'Light mode'}
+      </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem
         onSelect={signOut}
@@ -255,7 +272,12 @@ function NavItemLink({
   return (
     <Link
       href={link.href ?? '#'}
-      className={cn(buttonVariants({ variant, size: 'lg' }), 'justify-start')}
+      className={cn(
+        buttonVariants({ variant, size: 'lg' }),
+        isCurrentPath &&
+          'dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white',
+        'justify-start'
+      )}
     >
       <link.icon className='mr-2 h-4 w-4' />
       {link.title}
